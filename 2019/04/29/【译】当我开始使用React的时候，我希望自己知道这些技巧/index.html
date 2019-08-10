@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    save_scroll: false,
+    copycode: {"enable":false,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    }
+  };
+</script>
+
+  <meta name="description" content="自从2013年5月29日正式发布以来，React.js已经占领了互联网。我和很多开发者的成功都要归功于这个神奇的框架，这已经不是啥秘密了。 Medium上有很多React.js的教程，在我开始使用React.js时，我希望这些教程中有一个可以告诉我以下这些小技巧。 使用arrow function时不需要使用.bind(this)一般的，当你有一个受控的组件时，你会像以下示例这样做： 12345">
+<meta name="keywords" content="React">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【译】当我开始使用React的时候，我希望自己知道这些技巧">
+<meta property="og:url" content="http://zhangxin.blog/2019/04/29/【译】当我开始使用React的时候，我希望自己知道这些技巧/index.html">
+<meta property="og:site_name" content="ZhangXin">
+<meta property="og:description" content="自从2013年5月29日正式发布以来，React.js已经占领了互联网。我和很多开发者的成功都要归功于这个神奇的框架，这已经不是啥秘密了。 Medium上有很多React.js的教程，在我开始使用React.js时，我希望这些教程中有一个可以告诉我以下这些小技巧。 使用arrow function时不需要使用.bind(this)一般的，当你有一个受控的组件时，你会像以下示例这样做： 12345">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-26-075600.jpg">
+<meta property="og:image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-29-030507.gif">
+<meta property="og:image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-28-092815.gif">
+<meta property="og:image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-28-093236.png">
+<meta property="og:image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-28-093300.png">
+<meta property="og:updated_time" content="2019-04-29T03:34:01.757Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【译】当我开始使用React的时候，我希望自己知道这些技巧">
+<meta name="twitter:description" content="自从2013年5月29日正式发布以来，React.js已经占领了互联网。我和很多开发者的成功都要归功于这个神奇的框架，这已经不是啥秘密了。 Medium上有很多React.js的教程，在我开始使用React.js时，我希望这些教程中有一个可以告诉我以下这些小技巧。 使用arrow function时不需要使用.bind(this)一般的，当你有一个受控的组件时，你会像以下示例这样做： 12345">
+<meta name="twitter:image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-26-075600.jpg">
+  <link rel="canonical" href="http://zhangxin.blog/2019/04/29/【译】当我开始使用React的时候，我希望自己知道这些技巧/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>【译】当我开始使用React的时候，我希望自己知道这些技巧 | ZhangXin</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4f7c6be07dfbc40ad949ed5927febf5c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  <div class="container sidebar-position-left">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ZhangXin</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">ZhangXin's blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content page-post-detail">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxin.blog/2019/04/29/【译】当我开始使用React的时候，我希望自己知道这些技巧/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ZhangXin">
+      <meta itemprop="description" content="Fusce porttitor consectetur venenatis.">
+      <meta itemprop="image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-03-19-WechatIMG1.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ZhangXin">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">【译】当我开始使用React的时候，我希望自己知道这些技巧
+
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-04-29 11:33:46 / Modified: 11:34:01" itemprop="dateCreated datePublished" datetime="2019-04-29T11:33:46+08:00">2019-04-29</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+            <span class="post-meta-item" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+            
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2019/04/29/【译】当我开始使用React的时候，我希望自己知道这些技巧/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/04/29/【译】当我开始使用React的时候，我希望自己知道这些技巧/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-26-075600.jpg" alt="person using MacBook pro"></p>
+<p>自从2013年5月29日正式发布以来，React.js已经占领了互联网。我和很多开发者的成功都要归功于这个神奇的框架，这已经不是啥秘密了。</p>
+<p>Medium上有很多React.js的教程，在我开始使用React.js时，我希望这些教程中有一个可以告诉我以下这些小技巧。</p>
+<h3 id="使用arrow-function时不需要使用-bind-this"><a href="#使用arrow-function时不需要使用-bind-this" class="headerlink" title="使用arrow function时不需要使用.bind(this)"></a>使用arrow function时不需要使用.bind(this)</h3><p>一般的，当你有一个受控的组件时，你会像以下示例这样做：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">class Foo extends React.Component&#123;</span><br><span class="line">  constructor( props )&#123;</span><br><span class="line">    super( props );</span><br><span class="line">    this.handleClick = this.handleClick.bind(this);</span><br><span class="line">  &#125;</span><br><span class="line">  handleClick(event)&#123;</span><br><span class="line">    // your event handling logic</span><br><span class="line">  &#125;</span><br><span class="line">  render()&#123;</span><br><span class="line">    return (</span><br><span class="line">      &lt;button type=&quot;button&quot; </span><br><span class="line">      onClick=&#123;this.handleClick&#125;&gt;</span><br><span class="line">      Click Me</span><br><span class="line">      &lt;/button&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>你在每个方法中都写上<code>.bind(this)</code>，因为绝大多数教程都告诉你要这样做。如果你有几个受控组件，你的<code>constructor(){}</code>方法会变得十分臃肿。</p>
+<p><strong>作为替代，你可以这样做：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Foo extends React.Component&#123;</span><br><span class="line">  handleClick = (event) =&gt; &#123;</span><br><span class="line">    // your event handling logic</span><br><span class="line">  &#125;</span><br><span class="line">  render()&#123;</span><br><span class="line">    return (</span><br><span class="line">      &lt;button type=&quot;button&quot; </span><br><span class="line">      onClick=&#123;this.handleClick&#125;&gt;</span><br><span class="line">        Click Me</span><br><span class="line">      &lt;/button&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不错吧。</p>
+<p>ES6的arrow function使用Lexical Scoping，这允许方法在被触发时访问<code>this</code>。</p>
+<h3 id="当service-workers对你的开发产生阻碍时"><a href="#当service-workers对你的开发产生阻碍时" class="headerlink" title="当service workers对你的开发产生阻碍时"></a>当service workers对你的开发产生阻碍时</h3><p>Service workers非常适用于一个progressive web app，progressive web app允许离线访问，并且优化在较差网络环境下的用户的体验。</p>
+<p>但是当你还没有意识到service worker正在缓存你的静态文件，你会不停地部署你的热更新文件。</p>
+<p>不要慌，确保你的<code>src/index.js</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// Make sure it&apos;s set to unregister</span><br><span class="line">serviceWorker.unregister();</span><br></pre></td></tr></table></figure>
+
+<p>在16.8版本下，这行应该默认是<code>serverWorker.unregister()</code>。</p>
+<p>但是如果后面版本他们决定再次改变，你要知道去哪里找到这个设置。</p>
+<h3 id="在99-的情况下，你不需要eject"><a href="#在99-的情况下，你不需要eject" class="headerlink" title="在99%的情况下，你不需要eject"></a>在99%的情况下，你不需要eject</h3><p>Create React App提供了一个选项<code>yarn eject</code>，用于定制你的项目的构建过程。</p>
+<p>我记得我尝试着自定义一个构建过程以实现在我们的代码中可以自动关联SVG图片。我花了数个小时的时间尝试着去理解构建过程。最后，我们得到了一个包含SVG标签的导入文件，然后我们加快了网站的加载速度0.0001毫秒。</p>
+<p>在你的React项目中使用eject就像为了提高1%的速度，将你正在运行的汽车的引擎盖打开并更换了引擎。</p>
+<p>当然了，如果你已经是一个使用Webpack的资深人士，为了适应特殊的项目需求使用自定义构建过程是值得的。</p>
+<p>当你尝试按时完成任务时，将你的精力集中在能推进进度的点上。</p>
+<h3 id="使用ESlint-Auto-Fix-On-Save将会节约大量的时间"><a href="#使用ESlint-Auto-Fix-On-Save将会节约大量的时间" class="headerlink" title="使用ESlint Auto Fix On Save将会节约大量的时间"></a>使用ESlint Auto Fix On Save将会节约大量的时间</h3><p>你可能从某些地方复制了一些代码，他们的格式给了你沉重的打击(一看就头疼)。因为你无法忍受他们看起来有多丑，你花费时间去手动的添加空格。</p>
+<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-29-030507.gif" alt></p>
+<p>使用Visual Studio Code的ESLint插件，可以在保存的时候修复格式。</p>
+<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-28-092815.gif" alt></p>
+<p>如何使用呢？</p>
+<ol>
+<li><p>在你的<code>package.json</code>文件中，添加一些开发环境依赖，然后执行<code>npm i</code>或者<code>yarn</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">"devDependencies": &#123;</span><br><span class="line"> "eslint-config-airbnb": "^17.1.0",</span><br><span class="line"> "eslint-config-prettier": "^3.1.0",</span><br><span class="line"> "eslint-plugin-import": "^2.14.0",</span><br><span class="line"> "eslint-plugin-jsx-a11y": "^6.1.1",</span><br><span class="line"> "eslint-plugin-prettier": "^3.0.0",</span><br><span class="line"> "eslint-plugin-react": "^7.11.0"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装ESLint扩展</p>
+<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-28-093236.png" alt></p>
+</li>
+<li><p>开启Auto Fix On Save</p>
+<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-28-093300.png" alt></p>
+</li>
+</ol>
+<h3 id="你并不需要Redux-styled-components-等等…"><a href="#你并不需要Redux-styled-components-等等…" class="headerlink" title="你并不需要Redux,styled-components,等等…"></a>你并不需要Redux,styled-components,等等…</h3><p>每个工具都有它的目的，这就是说，了解不同的工具是有好处的。</p>
+<blockquote>
+<p><em>If all you have is a hammer, everything looks like a nail — Abraham Maslow</em></p>
+<p>如果你有一把锤子，那么一切都看起来像钉子— Abraham Maslow</p>
+</blockquote>
+<p>你需要考虑你在引入使用这些库所花费的时间，并比较下面几点：</p>
+<ul>
+<li>我在尝试解决什么问题？</li>
+<li>这个项目可以长久的从这个库中获得好处吗？</li>
+<li>React是不是提供了相同的，现成的方法？</li>
+</ul>
+<p>现在React提供了Context和Hooks，你还需要Redux吗？</p>
+<p>当你的用户在较差的网络环境下使用的时候，我墙裂的推荐Redux Offline。</p>
+<h3 id="重复事件处理器"><a href="#重复事件处理器" class="headerlink" title="重复事件处理器"></a>重复事件处理器</h3><p>如果你不想一遍又一遍的写相同的东西，重写一个事件处理器会是一个很好的选择：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">class App extends Component &#123;</span><br><span class="line"> constructor(props) &#123;</span><br><span class="line">  super(props);</span><br><span class="line">  this.state = &#123;</span><br><span class="line">   foo: &quot;&quot;,</span><br><span class="line">   bar: &quot;&quot;,</span><br><span class="line">  &#125;;</span><br><span class="line"> &#125;</span><br><span class="line"> // Reusable for all inputs</span><br><span class="line"> onChange = e =&gt; &#123;</span><br><span class="line">  const &#123;</span><br><span class="line">   target: &#123; value, name &#125;,</span><br><span class="line">  &#125; = e;</span><br><span class="line">  </span><br><span class="line">  // name will be the state name</span><br><span class="line">  this.setState(&#123;</span><br><span class="line">   [name]: value</span><br><span class="line">  &#125;);</span><br><span class="line"> &#125;;</span><br><span class="line"> </span><br><span class="line"> render() &#123;</span><br><span class="line">  return (</span><br><span class="line">   &lt;div&gt;</span><br><span class="line">    &lt;input name=&quot;foo&quot; onChange=&#123;this.onChange&#125; /&gt;</span><br><span class="line">    &lt;input name=&quot;bar&quot; onChange=&#123;this.onChange&#125; /&gt;   </span><br><span class="line">   &lt;/div&gt;</span><br><span class="line">  );</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="setState是异步的"><a href="#setState是异步的" class="headerlink" title="setState是异步的"></a>setState是异步的</h3><p>曾经愚蠢的我是这样写的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">constructor(props) &#123;</span><br><span class="line"> super(props);</span><br><span class="line"> this.state = &#123;</span><br><span class="line">  isFiltered: false</span><br><span class="line"> &#125;;</span><br><span class="line">&#125;</span><br><span class="line">toggleFilter = () =&gt; &#123;</span><br><span class="line"> this.setState(&#123;</span><br><span class="line">  isFiltered: !this.state.isFiltered</span><br><span class="line"> &#125;);</span><br><span class="line"> this.filterData();</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">filterData = () =&gt; &#123;</span><br><span class="line"> // this.state.isFiltered should be true, but it&apos;s not</span><br><span class="line"> if (this.state.isFiltered) &#123;</span><br><span class="line">  // Do some filtering</span><br><span class="line"> &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="优化方案一：将state传递下去"><a href="#优化方案一：将state传递下去" class="headerlink" title="优化方案一：将state传递下去"></a>优化方案一：将state传递下去</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">toggleFilter = () =&gt; &#123;</span><br><span class="line"> const currentFilterState = !this.state.isFiltered;</span><br><span class="line"> this.setState(&#123;</span><br><span class="line">  isFiltered: currentFilterState</span><br><span class="line"> &#125;);</span><br><span class="line"> this.filterData(currentFilterState);</span><br><span class="line">&#125;;</span><br><span class="line">filterData = (currentFilterState) =&gt; &#123;</span><br><span class="line"> if (currentFilterState) &#123;</span><br><span class="line">  // Do some filtering</span><br><span class="line"> &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="优化方案二：在setState的二次回调函数中处理"><a href="#优化方案二：在setState的二次回调函数中处理" class="headerlink" title="优化方案二：在setState的二次回调函数中处理"></a>优化方案二：在setState的二次回调函数中处理</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">toggleFilter = () =&gt; &#123;</span><br><span class="line"> this.setState((prevState) =&gt; (&#123;</span><br><span class="line">  isFiltered: !prevState.isFiltered</span><br><span class="line"> &#125;), () =&gt; &#123;</span><br><span class="line">  this.filterData();</span><br><span class="line"> &#125;);</span><br><span class="line">&#125;;</span><br><span class="line">filterData = () =&gt; &#123;</span><br><span class="line">  if (this.state.isFiltered) &#123;</span><br><span class="line">   // Do some filtering</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>这些技巧帮我节省了大量的时间，我相信还有更多这样的秘诀，如果你有其他的，请在评论去与我们分享。</p>
+<p>如果你的网站正在尝试与微信平台结合，并期许获得中国10亿以上的用户，请登录 <a href="https://pages.convertkit.com/b2469604dd/0c671fdd2d" target="_blank" rel="noopener">free glossary for commonly used WeChat terms</a>。</p>
+<p>原文地址：<a href="https://medium.freecodecamp.org/what-i-wish-i-knew-when-i-started-to-work-with-react-js-3ba36107fd13" target="_blank" rel="noopener">https://medium.freecodecamp.org/what-i-wish-i-knew-when-i-started-to-work-with-react-js-3ba36107fd13</a></p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/React/" rel="tag"># React</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/04/26/【译】如何正确的阅读代码/" rel="next" title="【译】如何正确的阅读代码">
+                  <i class="fa fa-chevron-left"></i> 【译】如何正确的阅读代码
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/05/13/【译】多线程简介/" rel="prev" title="【译】多线程简介">
+                  【译】多线程简介 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="comments"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-03-19-WechatIMG1.jpeg"
+      alt="ZhangXin">
+  <p class="site-author-name" itemprop="name">ZhangXin</p>
+  <div class="site-description motion-element" itemprop="description">Fusce porttitor consectetur venenatis.</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">tags</span>
+        
+      </div>
+    
+  </nav>
+
+
+  <div class="links-of-blogroll motion-element links-of-blogroll-block">
+    <div class="links-of-blogroll-title">
+      <i class="fa  fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://blog.lovem.fun/" title="http://blog.lovem.fun/" rel="noopener" target="_blank">进击的学霸的博客</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://code-fe.lovem.fun/" title="http://code-fe.lovem.fun/" rel="noopener" target="_blank">前端资源共享</a>
+        </li>
+      
+    </ul>
+  </div>
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用arrow-function时不需要使用-bind-this"><span class="nav-number">1.</span> <span class="nav-text">使用arrow function时不需要使用.bind(this)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#当service-workers对你的开发产生阻碍时"><span class="nav-number">2.</span> <span class="nav-text">当service workers对你的开发产生阻碍时</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在99-的情况下，你不需要eject"><span class="nav-number">3.</span> <span class="nav-text">在99%的情况下，你不需要eject</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用ESlint-Auto-Fix-On-Save将会节约大量的时间"><span class="nav-number">4.</span> <span class="nav-text">使用ESlint Auto Fix On Save将会节约大量的时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#你并不需要Redux-styled-components-等等…"><span class="nav-number">5.</span> <span class="nav-text">你并不需要Redux,styled-components,等等…</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重复事件处理器"><span class="nav-number">6.</span> <span class="nav-text">重复事件处理器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#setState是异步的"><span class="nav-number">7.</span> <span class="nav-text">setState是异步的</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#优化方案一：将state传递下去"><span class="nav-number">7.1.</span> <span class="nav-text">优化方案一：将state传递下去</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#优化方案二：在setState的二次回调函数中处理"><span class="nav-number">7.2.</span> <span class="nav-text">优化方案二：在setState的二次回调函数中处理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结语"><span class="nav-number">8.</span> <span class="nav-text">结语</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZhangXin</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.3.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="Total Visitors">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="Total Views">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+
+    
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.3.0"></script>
+  <script src="/js/motion.js?v=7.3.0"></script>
+
+
+  <script src="/js/affix.js?v=7.3.0"></script>
+  <script src="/js/schemes/pisces.js?v=7.3.0"></script>
+
+
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
+    
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', function() {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'P3xRz9HwuMs9MdlF58Xp7AEs-gzGzoHsz',
+    appKey: 'poBl7UWCx83LkaBuBStVNFWG',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    save_scroll: false,
+    copycode: {"enable":false,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    }
+  };
+</script>
+
+  <meta name="description" content="如何阅读代码而不扯掉自己的头发 写更多代码 阅读更多代码 每天重复以上  这是我再转行做编程几乎两年后给自己的建议。幸运的是，现在网络上有大量的课程和辅导来教会我们如何编码。不幸的是，现在依旧几乎没有什么指导我们如何阅读代码的资源。这是一个巨大的差距，目前越来越多的毕业生进入到技术领域，对阅读源码的强调从未如此重要。就像Brandon Bloom所说的：  如果代码在你的机器上运行，那就是你的软件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【译】如何正确的阅读代码">
+<meta property="og:url" content="http://zhangxin.blog/2019/04/26/【译】如何正确的阅读代码/index.html">
+<meta property="og:site_name" content="ZhangXin">
+<meta property="og:description" content="如何阅读代码而不扯掉自己的头发 写更多代码 阅读更多代码 每天重复以上  这是我再转行做编程几乎两年后给自己的建议。幸运的是，现在网络上有大量的课程和辅导来教会我们如何编码。不幸的是，现在依旧几乎没有什么指导我们如何阅读代码的资源。这是一个巨大的差距，目前越来越多的毕业生进入到技术领域，对阅读源码的强调从未如此重要。就像Brandon Bloom所说的：  如果代码在你的机器上运行，那就是你的软件">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-070654.gif">
+<meta property="og:image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-070647.gif">
+<meta property="og:image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-070640.png">
+<meta property="og:image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-070631.png">
+<meta property="og:image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-070623.png">
+<meta property="og:image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-131823.png">
+<meta property="og:image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-131902.png">
+<meta property="og:image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-131918.png">
+<meta property="og:image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-26-032726.png">
+<meta property="og:image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-26-032736.png">
+<meta property="og:updated_time" content="2019-04-29T03:31:26.893Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【译】如何正确的阅读代码">
+<meta name="twitter:description" content="如何阅读代码而不扯掉自己的头发 写更多代码 阅读更多代码 每天重复以上  这是我再转行做编程几乎两年后给自己的建议。幸运的是，现在网络上有大量的课程和辅导来教会我们如何编码。不幸的是，现在依旧几乎没有什么指导我们如何阅读代码的资源。这是一个巨大的差距，目前越来越多的毕业生进入到技术领域，对阅读源码的强调从未如此重要。就像Brandon Bloom所说的：  如果代码在你的机器上运行，那就是你的软件">
+<meta name="twitter:image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-070654.gif">
+  <link rel="canonical" href="http://zhangxin.blog/2019/04/26/【译】如何正确的阅读代码/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>【译】如何正确的阅读代码 | ZhangXin</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4f7c6be07dfbc40ad949ed5927febf5c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  <div class="container sidebar-position-left">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ZhangXin</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">ZhangXin's blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content page-post-detail">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxin.blog/2019/04/26/【译】如何正确的阅读代码/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ZhangXin">
+      <meta itemprop="description" content="Fusce porttitor consectetur venenatis.">
+      <meta itemprop="image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-03-19-WechatIMG1.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ZhangXin">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">【译】如何正确的阅读代码
+
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-04-26 14:55:11" itemprop="dateCreated datePublished" datetime="2019-04-26T14:55:11+08:00">2019-04-26</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-04-29 11:31:26" itemprop="dateModified" datetime="2019-04-29T11:31:26+08:00">2019-04-29</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+            
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2019/04/26/【译】如何正确的阅读代码/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/04/26/【译】如何正确的阅读代码/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="如何阅读代码而不扯掉自己的头发"><a href="#如何阅读代码而不扯掉自己的头发" class="headerlink" title="如何阅读代码而不扯掉自己的头发"></a>如何阅读代码而不扯掉自己的头发</h2><ol>
+<li>写更多代码</li>
+<li>阅读更多代码</li>
+<li>每天重复以上</li>
+</ol>
+<p>这是我再转行做编程几乎两年后给自己的建议。幸运的是，现在网络上有大量的课程和辅导来教会我们如何编码。不幸的是，现在依旧几乎没有什么指导我们如何阅读代码的资源。<br>这是一个巨大的差距，目前越来越多的毕业生进入到技术领域，对阅读源码的强调从未如此重要。就像Brandon Bloom所说的：</p>
+<blockquote>
+<p>如果代码在你的机器上运行，那就是你的软件，你要为此负责，你必须理解它们。</p>
+</blockquote>
+<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-070654.gif" alt="Yes,you."></p>
+<p>虽然每一个程序员都应该阅读代码，但是他们并没有。很多程序员选择避免阅读代码的原因是因为阅读别人的代码很难，这让人沮丧，并且让他们觉得自己很蠢。我了解这种感受，因为我的感觉也是这样。</p>
+<p><strong>事情并不是一定要这样</strong></p>
+<p>当我阅读其他人的代码的时候，我想出了一个阅读过程，这个过程只包含三步。很多人可能已经遵循这三步了，但是我保证还存在很多人并不是这样的。</p>
+<p>以下是我的步骤。</p>
+<h2 id="1-选择一个特殊的兴趣点"><a href="#1-选择一个特殊的兴趣点" class="headerlink" title="1.选择一个特殊的兴趣点"></a>1.选择一个特殊的兴趣点</h2><p>当我第一次尝试阅读代码的时候，那真是一场灾难。</p>
+<p>那时候我在学习Sinatra，我想深入的了解下底层细节。对于从哪里开始我一无所知。不开玩笑的说，我找到了Github上的仓库，开始盲目随机挑选文件。</p>
+<p>我想我可以花一下午的时间学习它，并且用一顿晚餐的时间牢牢的掌握它。终究，阅读我自己的代码就简单多了，那么区别到底在哪呢？</p>
+<p>我们都知道是怎么回事了，我只想说，阅读别人的代码的感觉就像撞上了一堵满是文字的墙。</p>
+<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-070647.gif" alt="duang,duang,duang"></p>
+<p>我一次想学习的太多了，很多初学者在第一次尝试阅读源码的时候都会犯一样的错误。</p>
+<p><strong>思维模型是一步一步建立起来的，代码应该用一样的方式阅读。</strong></p>
+<p>相比较通过艰难险阻来消化1000行代码，不如专注于一个单独的主题。如果可以分解成一个单独的方法就更好了。</p>
+<p>有一个狭小的目标可以帮助你了解什么是有相关的，什么是无关的。没有必要在不相关的地方浪费精力。</p>
+<p>无论如何，选择一个特殊的主题并不会解决你所有的问题。现在依旧有一个问题，那就是如何从代码库中找到相关的代码。</p>
+<p>这时候步骤二就来啦。</p>
+<h2 id="2-找到那根松散的线"><a href="#2-找到那根松散的线" class="headerlink" title="2.找到那根松散的线"></a>2.找到那根松散的线</h2><p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-070640.png" alt></p>
+<p>现在你有了一个明确的要学习的方法，下一步要做什么呢？</p>
+<p>我们非常幸运，编程语言都有调查工具。</p>
+<p>不管你想知道一个对象的一个类，一个类的父类，追踪堆栈，或者某个特定方法的所有者，大多数语言都提供这些特性。当你开始解开代码库的挂毯时，你会找到很多可以追寻的松线。</p>
+<p>与其用文字解释这个概念，我宁愿用代码展示给你。</p>
+<h3 id="调查"><a href="#调查" class="headerlink" title="调查"></a>调查</h3><p>假设我想学习更多关于ActiveRecord相关的内容，我会将我的注意点集中在<code>belongs_to</code>方法，试图理解它是如何影响我的的ActiveRecord模型的。</p>
+<p>ActiveRecord是Rails的一部分，Rails是以Ruby构建的，Ruby提供了大量的研究工具。</p>
+<p>我的第一个方法是使用调试工具，比如<code>pry</code> gem，用来仔细的分析我的一个ActiveRecord models。以下是我选择用来调试的模型的代码。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Comment</span> &lt; ActiveRecord::Base</span></span><br><span class="line">  belongs_to <span class="symbol">:creator</span>, <span class="symbol">foreign_key:</span> <span class="string">'user_id'</span>, <span class="symbol">class_name:</span> <span class="string">'User'</span></span><br><span class="line">  belongs_to <span class="symbol">:post</span></span><br><span class="line">  binding.pry</span><br><span class="line">  validates <span class="symbol">:body</span>, <span class="symbol">presence:</span> <span class="literal">true</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<p>将注意力集中在<code>binding.pry</code>的部分。当Rails运行到这一行代码时，<code>pry</code>会暂停应用的运行并打开命令控制行。</p>
+<p>下面是我在学习这个<code>belongs_to</code>关联的时候在pry控制点做的简单交互。</p>
+<ul>
+<li>我输入的所有行都以<code>pry &gt;</code>开头</li>
+<li><code>=&gt;</code>后显示的是控制台的输出</li>
+</ul>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">pry&gt; class = belongs_to(:post).class</span><br><span class="line">=&gt; ActiveRecord::Reflection::AssociationReflection</span><br><span class="line">pry&gt; <span class="class"><span class="keyword">class</span>.<span class="title">ancestors</span></span></span><br><span class="line">=&gt; [ActiveRecord::Reflection::AssociationReflection,        </span><br><span class="line">    ActiveRecord::Reflection::MacroReflection,</span><br><span class="line">     ...omitted <span class="keyword">for</span> brevity ]</span><br><span class="line">pry&gt; <span class="keyword">defined</span>? belongs_to</span><br><span class="line">=&gt; <span class="string">"method"</span></span><br><span class="line">pry&gt; method(<span class="symbol">:belongs_to</span>).owner</span><br><span class="line">=&gt; ActiveRecord::Associations::ClassMethods</span><br></pre></td></tr></table></figure>
+
+<p>以防你不了解Ruby，并且这些交互使你困惑，我提供了以下SparkNotes。</p>
+<ul>
+<li>当<code>belongs_to :post</code>运行时，它会返回一个<code>AssociatonReflection</code>类的实例。</li>
+<li><code>MacroRefletion</code>是<code>AssociationReflection</code>的超类。</li>
+<li><code>belongs_to</code>是定义在位于<code>ActiveRecord::Associations</code>的<code>ClassMethods</code>模块中的一个方法类。</li>
+</ul>
+<p>现在我有了很多引线，我应该先循着哪一条线呢？因为我对<code>belongs_to</code>方法本身更感兴趣，而并不想了解它的返回值，我开始研究<code>ClassMethods</code>模块。</p>
+<h2 id="3-跟随足迹"><a href="#3-跟随足迹" class="headerlink" title="3.跟随足迹"></a>3.跟随足迹</h2><p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-070631.png" alt></p>
+<p>现在你有了想要遵循的线索，剩下要做的事就是追踪这条线索知道你找到想要的答案。这看上去是个很明确的步骤，但是很多初学者都在这里被绊倒。</p>
+<p>其中一个原因就是代码库并没有目录，我们只能寄希望于维护者是以一种可读的方式组织自己的代码。</p>
+<p>在更大的项目中有很多的维护人员，通常情况下这并不是一个问题。</p>
+<p>在小型的项目中，你可能发现自己正在趟过一个巨大单一的文件，试图破译一个单个名称的变量，然后数不清的问自己：”这东西从哪来的？”。</p>
+<h3 id="Github的搜索"><a href="#Github的搜索" class="headerlink" title="Github的搜索"></a>Github的搜索</h3><p>一个能使这个任务更简单的工具是Github的搜索工具(假设你正在阅读的工程在Github上)。Github的搜索很便利，因为它会展示出所有和你搜索内容相匹配的文件，并且给出这些匹配内容在文件中的位置。</p>
+<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-070623.png" alt></p>
+<p>为了获得最好的结果，你需要使你搜索的内容越明确越好，这需要你知道自己正在找的东西是什么。用你交叉的十指漫无目的得在Github中搜索是徒劳的。</p>
+<p>回到我再步骤二中举得例子，我正在尝试在<code>ActiveRecord::Associations</code>中找到<code>ClassMethods</code>模块。通俗的来讲，我正在寻找嵌套在<code>ActivieRecord</code>模块中的<code>Associations</code>模块中的<code>ClassMethods</code>模块。并且我还在寻找<code>belongs_to</code>方法。</p>
+<p>这是我搜索的内容。</p>
+<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-131823.png" alt="img"></p>
+<p>显示的结果正好是我正在寻找的内容。</p>
+<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-131902.png" alt="img"></p>
+<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-131918.png" alt="belongs_to method inside of ClassMethods"></p>
+<h3 id="可能需要更多的研究"><a href="#可能需要更多的研究" class="headerlink" title="可能需要更多的研究"></a>可能需要更多的研究</h3><p>GitHub将显著的缩小你的搜索范围，依靠这个，我们可以找到一个更简单的点来深入的学习代码库。</p>
+<p>不幸的是，发现一个类或者一个方法本身很少能最终解开谜团，你可能发现自己在一个一个模块间来回跳转，直到对全局有了理解。</p>
+<p>我的情况是，<code>belongs_to</code>类引导我到了<code>BelongsTO</code>类中的<code>build</code>方法。这将我带到了<code>Association</code>超类。</p>
+<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-26-032726.png" alt="build method in BelongsTo class"></p>
+<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-26-032736.png" alt="build method in Association class"></p>
+<p>最后，我发现<code>belongs_to</code>方法会导致Rails添加几个实例方法到我的模型中，包括getter和setter方法。它使用称为元编程的高级编程技术来实现这一点。</p>
+<p>Rails还创建了一个Reflection类的实例，用于存储有关该关联的信息。</p>
+<p>Rails API文档中是这样描述的：</p>
+<blockquote>
+<p><em>Reflection enables the ability to examine the associations and aggregations of Active Record classes and objects. This information, for example, can be used in a form builder that takes an Active Record object and creates input fields for all of the attributes depending on their type and displays the associations to other objects.</em></p>
+</blockquote>
+<p>好神奇。</p>
+<h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h2><p>我不能保证分析其他人的程序将会是很有趣并且让人愉快的，但是这值得去做。这会给你的技能树增加一个至关重要的技能，并且提供额外的自由。你将不再需要依靠完整的文档或示例。虽然这是值得欣赏的，但是并不能解决所有问题。正如Jeff Atwood所说：</p>
+<blockquote>
+<p><strong>No matter what the documentation says, the source code is the ultimate truth, the best and most definitive and up-to-date documentation you’re likely to find.</strong></p>
+</blockquote>
+<blockquote>
+<p>不管文档是咋说的，源码都是无法否认的事实，你可以找到最好的，最可信的，最新的文档。</p>
+</blockquote>
+<p>所以尝试一下吧！</p>
+<p>现在肯定有一些你一直渴望了解学习的东西。 不要让代码库的大小吓倒你。 打开代码库到您最喜欢的框架并开始挖掘。 如果你按照我在这篇文章中列出的步骤，你很快就会成为一名源代码大师。</p>
+<p>原文地址：<a href="https://medium.com/launch-school/how-to-read-source-code-without-ripping-your-hair-out-e066472bbe8d" target="_blank" rel="noopener">https://medium.com/launch-school/how-to-read-source-code-without-ripping-your-hair-out-e066472bbe8d</a></p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/03/20/解决Android-Studio中远程依赖包重复的问题/" rel="next" title="解决Android Studio中远程依赖包重复的问题">
+                  <i class="fa fa-chevron-left"></i> 解决Android Studio中远程依赖包重复的问题
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/04/29/【译】当我开始使用React的时候，我希望自己知道这些技巧/" rel="prev" title="【译】当我开始使用React的时候，我希望自己知道这些技巧">
+                  【译】当我开始使用React的时候，我希望自己知道这些技巧 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="comments"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-03-19-WechatIMG1.jpeg"
+      alt="ZhangXin">
+  <p class="site-author-name" itemprop="name">ZhangXin</p>
+  <div class="site-description motion-element" itemprop="description">Fusce porttitor consectetur venenatis.</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">tags</span>
+        
+      </div>
+    
+  </nav>
+
+
+  <div class="links-of-blogroll motion-element links-of-blogroll-block">
+    <div class="links-of-blogroll-title">
+      <i class="fa  fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://blog.lovem.fun/" title="http://blog.lovem.fun/" rel="noopener" target="_blank">进击的学霸的博客</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://code-fe.lovem.fun/" title="http://code-fe.lovem.fun/" rel="noopener" target="_blank">前端资源共享</a>
+        </li>
+      
+    </ul>
+  </div>
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#如何阅读代码而不扯掉自己的头发"><span class="nav-number">1.</span> <span class="nav-text">如何阅读代码而不扯掉自己的头发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-选择一个特殊的兴趣点"><span class="nav-number">2.</span> <span class="nav-text">1.选择一个特殊的兴趣点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-找到那根松散的线"><span class="nav-number">3.</span> <span class="nav-text">2.找到那根松散的线</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#调查"><span class="nav-number">3.1.</span> <span class="nav-text">调查</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-跟随足迹"><span class="nav-number">4.</span> <span class="nav-text">3.跟随足迹</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Github的搜索"><span class="nav-number">4.1.</span> <span class="nav-text">Github的搜索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可能需要更多的研究"><span class="nav-number">4.2.</span> <span class="nav-text">可能需要更多的研究</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结束"><span class="nav-number">5.</span> <span class="nav-text">结束</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZhangXin</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.3.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="Total Visitors">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="Total Views">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+
+    
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.3.0"></script>
+  <script src="/js/motion.js?v=7.3.0"></script>
+
+
+  <script src="/js/affix.js?v=7.3.0"></script>
+  <script src="/js/schemes/pisces.js?v=7.3.0"></script>
+
+
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
+    
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', function() {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'P3xRz9HwuMs9MdlF58Xp7AEs-gzGzoHsz',
+    appKey: 'poBl7UWCx83LkaBuBStVNFWG',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

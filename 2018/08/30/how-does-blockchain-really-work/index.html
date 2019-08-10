@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    save_scroll: false,
+    copycode: {"enable":false,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    }
+  };
+</script>
+
+  <meta name="description" content="区块链实际上是如何工作的？在维基百科上，区块链是这样定义的：  一种分布式的数据库，用于维护一个连续的、不断增长的记录（称为块）列表。  看上去很好很简单，但是它是如何工作的呢？ 为了说明区块链，我们将要用到一个名为Blockchain CLI的开源的命令行交互界面。 另外我还创建了一个基于浏览器的版本  安装命令行界面版本如果你还没有安装Node.js 在终端中执行下面的命令： 12npm in">
+<meta name="keywords" content="blockchain">
+<meta property="og:type" content="article">
+<meta property="og:title" content="how-does-blockchain-really-work">
+<meta property="og:url" content="http://zhangxin.blog/2018/08/30/how-does-blockchain-really-work/index.html">
+<meta property="og:site_name" content="ZhangXin">
+<meta property="og:description" content="区块链实际上是如何工作的？在维基百科上，区块链是这样定义的：  一种分布式的数据库，用于维护一个连续的、不断增长的记录（称为块）列表。  看上去很好很简单，但是它是如何工作的呢？ 为了说明区块链，我们将要用到一个名为Blockchain CLI的开源的命令行交互界面。 另外我还创建了一个基于浏览器的版本  安装命令行界面版本如果你还没有安装Node.js 在终端中执行下面的命令： 12npm in">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1600/1*cdVD7nxyDPb35phEisVXww.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1600/1*Y3c_hIqCuiDH4x-8dObVyg.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1600/1*SmJPc37pUbFySCvUdxnQxA.gif">
+<meta property="og:updated_time" content="2019-03-19T10:28:10.889Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="how-does-blockchain-really-work">
+<meta name="twitter:description" content="区块链实际上是如何工作的？在维基百科上，区块链是这样定义的：  一种分布式的数据库，用于维护一个连续的、不断增长的记录（称为块）列表。  看上去很好很简单，但是它是如何工作的呢？ 为了说明区块链，我们将要用到一个名为Blockchain CLI的开源的命令行交互界面。 另外我还创建了一个基于浏览器的版本  安装命令行界面版本如果你还没有安装Node.js 在终端中执行下面的命令： 12npm in">
+<meta name="twitter:image" content="https://cdn-images-1.medium.com/max/1600/1*cdVD7nxyDPb35phEisVXww.png">
+  <link rel="canonical" href="http://zhangxin.blog/2018/08/30/how-does-blockchain-really-work/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>how-does-blockchain-really-work | ZhangXin</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4f7c6be07dfbc40ad949ed5927febf5c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  <div class="container sidebar-position-left">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ZhangXin</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">ZhangXin's blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content page-post-detail">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxin.blog/2018/08/30/how-does-blockchain-really-work/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ZhangXin">
+      <meta itemprop="description" content="Fusce porttitor consectetur venenatis.">
+      <meta itemprop="image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-03-19-WechatIMG1.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ZhangXin">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">how-does-blockchain-really-work
+
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2018-08-30 18:44:17" itemprop="dateCreated datePublished" datetime="2018-08-30T18:44:17+08:00">2018-08-30</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-03-19 18:28:10" itemprop="dateModified" datetime="2019-03-19T18:28:10+08:00">2019-03-19</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+            
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2018/08/30/how-does-blockchain-really-work/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2018/08/30/how-does-blockchain-really-work/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="区块链实际上是如何工作的？"><a href="#区块链实际上是如何工作的？" class="headerlink" title="区块链实际上是如何工作的？"></a>区块链实际上是如何工作的？</h1><p>在维基百科上，区块链是这样定义的：</p>
+<blockquote>
+<p>一种分布式的数据库，用于维护一个连续的、不断增长的记录（称为块）列表。</p>
+</blockquote>
+<p>看上去很好很简单，但是它是如何工作的呢？</p>
+<p>为了说明区块链，我们将要用到一个名为<a href="https://github.com/seanjameshan/blockchain-cli" target="_blank" rel="noopener">Blockchain CLI</a>的开源的命令行交互界面。</p>
+<p>另外我还创建了<a href="https://blockchaindemo.io/" target="_blank" rel="noopener">一个基于浏览器的版本</a></p>
+<p><img src="https://cdn-images-1.medium.com/max/1600/1*cdVD7nxyDPb35phEisVXww.png" alt></p>
+<h2 id="安装命令行界面版本"><a href="#安装命令行界面版本" class="headerlink" title="安装命令行界面版本"></a>安装命令行界面版本</h2><p>如果你还没有安装Node.js</p>
+<p>在终端中执行下面的命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install blockchain-cli -g</span><br><span class="line">blockchain</span><br></pre></td></tr></table></figure>
+
+<p>你应该会看到<code>👋 Welcome to Blockchain CLI!</code> 和<code>blockchain →</code>提示，表明准备好了接受命令。</p>
+<h2 id="块看起来是什么样子？"><a href="#块看起来是什么样子？" class="headerlink" title="块看起来是什么样子？"></a>块看起来是什么样子？</h2><p>要查看你当前的区块，在命令提示符中输入<code>blockchain</code>或者<code>bc</code>，你会看到如下图所示的区块。</p>
+<p><img src="https://cdn-images-1.medium.com/max/1600/1*Y3c_hIqCuiDH4x-8dObVyg.png" alt></p>
+<ul>
+<li><strong>Index(Block #)</strong>:这是哪一个块？（创世区块的索引为0）</li>
+<li><strong>Hash</strong>:这个块是否有效</li>
+<li><strong>Previous Hash</strong>:上一个块是否有效</li>
+<li><strong>Timestamp</strong>:这个块生成的时间</li>
+<li><strong>Data</strong>:这个块中存储的信息</li>
+<li><strong>Nonce</strong>:经历了多少次迭代后找到的有效块</li>
+</ul>
+<h3 id="创世区块"><a href="#创世区块" class="headerlink" title="创世区块"></a>创世区块</h3><p>所有区块都是从创世区块开始的。接下来你会看到，每一个区块在区块链中都依赖于上一个区块。所以，我们需要创世区块来开采我们的第一个区块。</p>
+<h2 id="当一个新的块被开采时发生了什么？"><a href="#当一个新的块被开采时发生了什么？" class="headerlink" title="当一个新的块被开采时发生了什么？"></a>当一个新的块被开采时发生了什么？</h2><p>我们来开采第一个区块，在命令提示符中输入<code>mine freeCodeCamp♥︎</code></p>
+<p><img src="https://cdn-images-1.medium.com/max/1600/1*SmJPc37pUbFySCvUdxnQxA.gif" alt></p>
+<p>在区块链上查看最后的区块索引和上一个区块的hash。在这种情况下，创世区块是最后一个区块。</p>
+<ul>
+<li><strong>Index:</strong> o+1 = 1</li>
+<li><strong>Previous Hash:</strong> 0000018035a828da0…</li>
+<li><strong>Timestamp:</strong> When the block is added</li>
+<li><strong>Data:</strong> freeCodeCamp❤</li>
+<li><strong>Hash:</strong> ??</li>
+<li><strong>Nonce:</strong> ??</li>
+</ul>
+<h2 id="如何计算出hash值"><a href="#如何计算出hash值" class="headerlink" title="如何计算出hash值"></a>如何计算出hash值</h2><p>hash值是一个唯一标识数据的固定长度的数值。</p>
+<p>一个hash值是由index,previous block hash,timestamp,block data和nonce这些输入计算出的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CryptoJS.SHA256(index + previousHash + timestamp + data + nonce)</span><br></pre></td></tr></table></figure>
+
+<p>SHA256算法会计算出一个唯一的hash值，给出上述的输入，相同的输入总是会返回同一个hash值。</p>
+<h3 id="你注意到了block-hash中的四个前导0了吗？"><a href="#你注意到了block-hash中的四个前导0了吗？" class="headerlink" title="你注意到了block hash中的四个前导0了吗？"></a>你注意到了block hash中的四个前导0了吗？</h3><p>四个前导0是有效散列的最低要求。所需的前导0的数量称为难度。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">function isValidHashDifficulty(hash, difficulty) &#123;</span><br><span class="line">  for (var i = 0, b = hash.length; i &lt; b; i ++) &#123;</span><br><span class="line">      if (hash[i] !== &apos;0&apos;) &#123;</span><br><span class="line">          break;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  return i &gt;= difficulty;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同时也被称为<a href="https://zh.wikipedia.org/wiki/工作量證明" target="_blank" rel="noopener">工作量证明</a>。</p>
+<h2 id="什么是nonce"><a href="#什么是nonce" class="headerlink" title="什么是nonce"></a>什么是nonce</h2><p>nonce是用来查找有效hash的数字。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">let nonce = 0;</span><br><span class="line">let hash;</span><br><span class="line">let input;</span><br><span class="line">while(!isValidHashDifficulty(hash)) &#123;     </span><br><span class="line">  nonce = nonce + 1;</span><br><span class="line">  input = index + previousHash + timestamp + data + nonce;</span><br><span class="line">  hash = CryptoJS.SHA256(input)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>nonce值会迭代直到hash有效，在我们的案例中，一个有效的hash至少有四个前导0，查找与有效hash相对应的nonce的过程被称为mining(挖矿)。</p>
+<p>随着难度的增加，存在的有效的hash值得数量减少，这时查找有效的hash值就需要更多的算力。</p>
+<h3 id="为什么这很重要？"><a href="#为什么这很重要？" class="headerlink" title="为什么这很重要？"></a>为什么这很重要？</h3><p>因为这保持了区块链的不可变。</p>
+<p>如果我们有下面的区块链A→B→C，现在有人想要修改区块A中的数据。将会发生：</p>
+<ol>
+<li>区块A中的数据变化</li>
+<li>区块A的hash发生变化，因为在计算A的hash值时用到了A中的数据</li>
+<li>区块A变为无效，因为它的hash不再有四个前导0</li>
+<li>区块B的hash发生变化，因为在计算B的hash值是用到了A的hash值</li>
+<li>区块B变为无效，因为它的hash不再有四个前导0</li>
+<li>区块C的hash发生变化，因为在计算C的hash值是用到了B的hash值</li>
+<li>区块C变为无效，因为它的hash不再有四个前导0</li>
+</ol>
+<p>改变一个区块的唯一方法就是再次挖掘区块，然后是所有区块。由于新的区块总是在被添加，所有改变区块链几乎是不可能的。</p>
+<p>希望这个教程对你有帮助。</p>
+<p>如果你想查看web版本的demo，请访问<a href="http://blockchaindemo.io/" target="_blank" rel="noopener">http://blockchaindemo.io</a></p>
+<p>原文链接：<a href="https://medium.freecodecamp.org/how-does-blockchain-really-work-i-built-an-app-to-show-you-6b70cd4caf7d" target="_blank" rel="noopener">https://medium.freecodecamp.org/how-does-blockchain-really-work-i-built-an-app-to-show-you-6b70cd4caf7d</a></p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/blockchain/" rel="tag"># blockchain</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2018/08/22/Jenkins配置/" rel="next" title="Jenkins配置">
+                  <i class="fa fa-chevron-left"></i> Jenkins配置
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2018/12/07/如何修改QMUI中的一些组件UI/" rel="prev" title="如何修改QMUI中的一些组件UI">
+                  如何修改QMUI中的一些组件UI <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="comments"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-03-19-WechatIMG1.jpeg"
+      alt="ZhangXin">
+  <p class="site-author-name" itemprop="name">ZhangXin</p>
+  <div class="site-description motion-element" itemprop="description">Fusce porttitor consectetur venenatis.</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">tags</span>
+        
+      </div>
+    
+  </nav>
+
+
+  <div class="links-of-blogroll motion-element links-of-blogroll-block">
+    <div class="links-of-blogroll-title">
+      <i class="fa  fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://blog.lovem.fun/" title="http://blog.lovem.fun/" rel="noopener" target="_blank">进击的学霸的博客</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://code-fe.lovem.fun/" title="http://code-fe.lovem.fun/" rel="noopener" target="_blank">前端资源共享</a>
+        </li>
+      
+    </ul>
+  </div>
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#区块链实际上是如何工作的？"><span class="nav-number">1.</span> <span class="nav-text">区块链实际上是如何工作的？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装命令行界面版本"><span class="nav-number">1.1.</span> <span class="nav-text">安装命令行界面版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#块看起来是什么样子？"><span class="nav-number">1.2.</span> <span class="nav-text">块看起来是什么样子？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创世区块"><span class="nav-number">1.2.1.</span> <span class="nav-text">创世区块</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#当一个新的块被开采时发生了什么？"><span class="nav-number">1.3.</span> <span class="nav-text">当一个新的块被开采时发生了什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何计算出hash值"><span class="nav-number">1.4.</span> <span class="nav-text">如何计算出hash值</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#你注意到了block-hash中的四个前导0了吗？"><span class="nav-number">1.4.1.</span> <span class="nav-text">你注意到了block hash中的四个前导0了吗？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是nonce"><span class="nav-number">1.5.</span> <span class="nav-text">什么是nonce</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么这很重要？"><span class="nav-number">1.5.1.</span> <span class="nav-text">为什么这很重要？</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZhangXin</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.3.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="Total Visitors">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="Total Views">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+
+    
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.3.0"></script>
+  <script src="/js/motion.js?v=7.3.0"></script>
+
+
+  <script src="/js/affix.js?v=7.3.0"></script>
+  <script src="/js/schemes/pisces.js?v=7.3.0"></script>
+
+
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
+    
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', function() {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'P3xRz9HwuMs9MdlF58Xp7AEs-gzGzoHsz',
+    appKey: 'poBl7UWCx83LkaBuBStVNFWG',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

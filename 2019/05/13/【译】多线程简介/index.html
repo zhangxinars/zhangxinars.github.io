@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    save_scroll: false,
+    copycode: {"enable":false,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    }
+  };
+</script>
+
+  <meta name="description" content="一步步探索并发的世界。 现代计算机有在同一时间处理多项任务的能力。得益于硬件的发展和更加智能的操作系统的支持，无论是处理速度还是响应速度，多线程的特性使得你的程序运行的更快。 创作利用这种能力的软件是件非常迷人的事情，但是困难在于：这需要你理解在你的计算机内部到底发生了什么。首先我先浅显的介绍下线程，一个由操作系统提供的用于施展多线程魔术的工具。就让装逼开始吧。 进程和线程：用正确的方式命名现代操">
+<meta name="keywords" content="多线程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【译】多线程简介">
+<meta property="og:url" content="http://zhangxin.blog/2019/05/13/【译】多线程简介/index.html">
+<meta property="og:site_name" content="ZhangXin">
+<meta property="og:description" content="一步步探索并发的世界。 现代计算机有在同一时间处理多项任务的能力。得益于硬件的发展和更加智能的操作系统的支持，无论是处理速度还是响应速度，多线程的特性使得你的程序运行的更快。 创作利用这种能力的软件是件非常迷人的事情，但是困难在于：这需要你理解在你的计算机内部到底发生了什么。首先我先浅显的介绍下线程，一个由操作系统提供的用于施展多线程魔术的工具。就让装逼开始吧。 进程和线程：用正确的方式命名现代操">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-05-08-073028.png">
+<meta property="og:image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-05-08-123859.png">
+<meta property="og:updated_time" content="2019-05-13T06:18:56.092Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【译】多线程简介">
+<meta name="twitter:description" content="一步步探索并发的世界。 现代计算机有在同一时间处理多项任务的能力。得益于硬件的发展和更加智能的操作系统的支持，无论是处理速度还是响应速度，多线程的特性使得你的程序运行的更快。 创作利用这种能力的软件是件非常迷人的事情，但是困难在于：这需要你理解在你的计算机内部到底发生了什么。首先我先浅显的介绍下线程，一个由操作系统提供的用于施展多线程魔术的工具。就让装逼开始吧。 进程和线程：用正确的方式命名现代操">
+<meta name="twitter:image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-05-08-073028.png">
+  <link rel="canonical" href="http://zhangxin.blog/2019/05/13/【译】多线程简介/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>【译】多线程简介 | ZhangXin</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4f7c6be07dfbc40ad949ed5927febf5c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  <div class="container sidebar-position-left">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ZhangXin</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">ZhangXin's blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content page-post-detail">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxin.blog/2019/05/13/【译】多线程简介/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ZhangXin">
+      <meta itemprop="description" content="Fusce porttitor consectetur venenatis.">
+      <meta itemprop="image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-03-19-WechatIMG1.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ZhangXin">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">【译】多线程简介
+
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-05-13 11:51:08 / Modified: 14:18:56" itemprop="dateCreated datePublished" datetime="2019-05-13T11:51:08+08:00">2019-05-13</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+            <span class="post-meta-item" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+            
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2019/05/13/【译】多线程简介/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/05/13/【译】多线程简介/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><em>一步步探索并发的世界。</em></p>
+<p>现代计算机有在同一时间处理多项任务的能力。得益于硬件的发展和更加智能的操作系统的支持，无论是处理速度还是响应速度，多线程的特性使得你的程序运行的更快。</p>
+<p>创作利用这种能力的软件是件非常迷人的事情，但是困难在于：这需要你理解在你的计算机内部到底发生了什么。首先我先浅显的介绍下线程，一个由操作系统提供的用于施展多线程魔术的工具。就让装逼开始吧。</p>
+<h2 id="进程和线程：用正确的方式命名"><a href="#进程和线程：用正确的方式命名" class="headerlink" title="进程和线程：用正确的方式命名"></a>进程和线程：用正确的方式命名</h2><p>现代操作系统可以同时运行多个程序。这就是为啥你可以在浏览器中阅读这篇文章(一个程序)，同时用你的media player听音乐(另一个程序)。每一个程序都被认为是一个正在被执行的进程。操作系统了解很多软件技巧，并且利用底层硬件，来使进程与其他进程区分开，单独的运行。不管是用什么方法，最终的结果就是你的感受是所有的程序在同时运行。</p>
+<p>通过运行进程来实现同时处理多个操作并不是唯一的方法。每个进程都可以在内部同时运行子任务，叫做<strong>线程</strong>。你可以将线程理解成进程本身的一个切片。每个进程在启动时都会触发一个线程，这被称为<strong>主线程(main thread)</strong>。同时，根据进程或者开发者的需要，其他线程可能被启动或者被终止。<strong>同步多线程</strong>就是在一个进程中运行多个线程。</p>
+<p>举个🌰，很可能你的media player运行了多个线程：一个用于初始化接口，这通常是主线程，另一个线程用于播放音乐等等。</p>
+<p>你可以将操作系统想象成一个包含多个进程的容器，每个进程包含多个线程。本文中我们只关注线程，但是整个话题引人入胜，值得在以后进行更深入的讨论。</p>
+<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-05-08-073028.png" alt="*1. Operating systems can be seen as a box that contains processes, which in turn contain one or more threads.*"></p>
+<h3 id="进程和线程的区别"><a href="#进程和线程的区别" class="headerlink" title="进程和线程的区别"></a>进程和线程的区别</h3><p>每个进程都有操作系统分配给它自己的内存块。默认情况下这些内存不会与其他进程共享：你的游览器没有操作media player和vice versa的内存的权限。如果你同时运行一个进程的两个实例，比如说启动了你的浏览器两次，则会发生一样的事情。操作系统会把每个实例当做一个新的进程处理，分配给它独立的内存。所以，默认情况下，两个以上的进程间没有办法共享数据，除非他们使用了更高级的用法：这就是传说中的<a href="https://en.wikipedia.org/wiki/Inter-process_communication" target="_blank" rel="noopener">进程间通信(IPC)</a>。</p>
+<p>和进程不同，线程间共享一个操作系统分配给它们父进程的的内存块：在media player主接口中的数据可以很轻松的被audio engine和vice versa访问。所以比两个进程间通信要更简单。除此之外，线程一般比进程要更轻量：它们占用更少的资源并且可以更快地创建，这就是为什么它们也被称为<strong>轻量进程(lightweight processes)</strong>。</p>
+<p>线程是一个使你的程序可以同时执行多个操作的便捷实现方式。如果不用线程的话你可能必须给每个任务写一个程序，把它们当做进程来运行并且通过操作系统同步它们。这可能会更困难(IPC非常棘手)并且更慢(进程比线程更重)。</p>
+<h3 id="绿色线程，纤程"><a href="#绿色线程，纤程" class="headerlink" title="绿色线程，纤程"></a>绿色线程，纤程</h3><p>目前我们提到的线程都是操作系统中的：一个进程想要开启一个新线程必须通过操作系统。不是所有的平台都天然的支持线程。不过，<strong>绿色线程(Green threads)</strong>，也被称为<strong>纤程(fibers)</strong>，这是在不提供多线程能力的环境中可使多线程程序工作的一种仿真。举个🌰，假设底层操作系统不支持本地线程，那么虚拟机可能实现了一个绿色线程。</p>
+<p>绿色线程创建和处理的的更快，因为他们完全绕过了操作系统，但是这也有坏处，我将在以后的文章中介绍这一部分。</p>
+<p>“绿色线程”的名称来源于Sun Microsystem的Green Team，他们在90年代设计了最早的Java线程库。今天Java已经不再使用绿色线程：他们在2000年改用本地语言了。其他一些编程语言，比如Go，Haskell或者Rust等，他们实现了类似于绿色线程的特性替代了本地线程。</p>
+<h2 id="线程用来做什么"><a href="#线程用来做什么" class="headerlink" title="线程用来做什么"></a>线程用来做什么</h2><p>为什么一个进程应该使用多个线程？正如我之前说的，并行的处理事务可以大大的提高速度。如果你要用你的视频编辑器处理一个视频。编辑器有可能足够聪明将渲染操作分散到多个线程，每个线程处理一个最终视频的分块。如果用一个线程来处理这个任务可能花费一个小时，用两个线程可能花费30分钟，用四个线程会花费15分钟，以此类推。</p>
+<p>真的这么简单吗？有三个重要的点值得深思：</p>
+<ol>
+<li>不是所有的程序都需要多线程。如果你的应用执行一个有序操作或者经常等待用户去做一些操作，那么多线程可能就没那么适用了。</li>
+<li>你仅仅只是不像一个应用抛出更多线程来使它运行的更快：每个子任务都必须经过思考和仔细的设计来执行并行操作。</li>
+<li>并不是100%的保证线程可以真正的并行执行他们的操作，同时：这实际上是由底层硬件决定的。</li>
+</ol>
+<p>最后一点十分重要：如果你的计算机不支持同一时间进行多操作，操作系统不得不伪造他们。我们在一分钟内将会看到。现在我们将<strong>并发</strong>想象成一种任务在同一时间运行的主观感受，而真正的任务并行是确确实实的在同一时间运行。</p>
+<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-05-08-123859.png" alt="*2. Parallelism is a subset of concurrency.*"></p>
+<h2 id="是什么使并发和并行可行"><a href="#是什么使并发和并行可行" class="headerlink" title="是什么使并发和并行可行"></a>是什么使并发和并行可行</h2><p>你的计算机中的中央处理器(CPU)努力地执行了运行程序的工作。它由几个部分组成，其中很重要的一个就是所谓的<strong>核心</strong>：这是真正执行计算的地方。一个核心只有同时处理一个操作的能力。</p>
+<p>这当然是个重要的缺陷。正因为如此，操作系统拥有成熟的高级方法来给用户同时运行多个进程的能力，尤其是在图像化环境下，即使在单核心的机器上。最重要的一个方法是抢占式多任务处理，抢占是一种中断一个任务，切换到另一个任务，并在后续唤醒第一个任务的能力。</p>
+<p>所以如果你的CPU只有一个核心，操作系统的一部分工作就是将单个的核心的计算能力分配给多个进程或者线程，在一个循环中一个一个按顺序执行。这个操作给了你一种同时执行了不止一个程序的错觉，或者是感觉上一个进程同时做了多件事(如果是多线程)。虽然这实现了并发性，但是真正的平行—同步的运行多个进程的能力—依旧是缺失的。</p>
+<p>现代的CPU们内部都有了不止一个核心，每个核心同一时间执行一个独立的操作。这意味着两个以上的核心实现真正的并行是可行的。举个🌰，我的Intel Core i7处理器拥有四个核心：同时地，他可以同一时间运行四个不同的进程或者线程。</p>
+<p>操作系统可以识别到CPU核心的数量然后给它们每个分配进程或者线程。一个线程可能被操作系统分配到任意一个核心，这种调度对于正在运行的程序来说是完全透明的。另外，为了防止所有的核心都在工作采用了抢占式多任务处理。这给了你可以运行比计算机真正核心数量或者核心可以承担的数量更多的线程数的能力。</p>
+<h3 id="多线程应用运行在单核环境下：这真的合理吗？"><a href="#多线程应用运行在单核环境下：这真的合理吗？" class="headerlink" title="多线程应用运行在单核环境下：这真的合理吗？"></a>多线程应用运行在单核环境下：这真的合理吗？</h3><p>真正的并行在单核机器上是不可能实现的。然而，如果你的应用可以从中受益，那么将其做成多线程程序依旧是合理的。当一个进程拥有多个线程，即使在其中一个线程运行很慢或者阻塞的时候，抢占式多任务处理可以保持应用正常运行。</p>
+<p>举个🌰，你正在使用一个桌面应用工作，这个应用在从一个运行速度奇慢的硬盘上读取数据。如果你整个程序只有一个线程，那么整个应用都会停止响应知道硬盘操作结束：当仅有的一个线程在等待硬盘被唤醒的时候，CPU的算力就被浪费了。当然除了这个进程，操作系统还在运行其他的进程，但是你这个应用并不会有任何进展。</p>
+<p>我们用多线程的方式重新设计下你的应用。线程A负责访问硬盘，同时线程B负责主接口。如果线程A因为设备速度慢卡住了，线程B已经可以运行主接口，保证你的应用是可响应的。这是可行的，因为如果有两个线程，操作系统可以交替的给它们CPU资源，而不至于因为其中一个线程速度慢卡住。</p>
+<h2 id="线程越多，问题越多"><a href="#线程越多，问题越多" class="headerlink" title="线程越多，问题越多"></a>线程越多，问题越多</h2><p>据我们所知，线程间分享它们的父进程的同一内存块。这使得一个应用中两个或者更多的线程间交互数据变成非常简单。举个🌰：一个movie editor可能会占有共享内存的很大一部分包含视频的时间轴。这样的内存会被几个用于将视频渲染到文件的工作线程读取，他们都需要内存区域的一个句柄(比如指针)，用于从硬盘读取和渲染到硬盘。</p>
+<p>如果两个以上的线程从同一个内存位置读取，那么就不会有啥问题。如果至少一个线程正在写入共享内存，而其他线程正在从共享内存读取数据，那问题就出现了。这时候可能会出现两个问题：</p>
+<ul>
+<li><strong>数据冲突</strong>——当一个写操作线程正在修改一个内存，一个读操作线程可能正在从中读取。如果写操作线程还未完成这个修改，那读操作线程就会读取到损坏的数据；</li>
+<li><strong>紊乱情况</strong>——一个读操作线程被认为只在写操作完成后才做读取。那如果相反的情况发生呢？一个比数据冲突更微妙的情况，紊乱情况是指，两个或两个以上的线程以不可预测的顺序执行了工作，它们的工作本来应该按照某种顺序执行以正确的完成。即使在有保护的情况下，你的程序也可能触发紊乱情况。</li>
+</ul>
+<h3 id="线程安全概念"><a href="#线程安全概念" class="headerlink" title="线程安全概念"></a>线程安全概念</h3><p>如果一个代码片段工作正常，即使很多线程同步地执行，也不会出现数据冲突和紊乱情况，那么它就是线程安全的。你可能注意到一些开发库宣传他们自己是线程安全的：如果你正在编写一个多线程程序，你需要保证其他第三方方法可以在不同线程间使用而不会触发并发问题。</p>
+<h2 id="数据冲突的根本原因"><a href="#数据冲突的根本原因" class="headerlink" title="数据冲突的根本原因"></a>数据冲突的根本原因</h2><p>我们知道一个CPU在同一时间只能执行一个机器指令。这些指令被称为是原子性的，因为它们不可分割：就是说不能再分割成更小的操作了。希腊单词”atom”意思就是不可切分。</p>
+<p>不可分割的特性使得原子操作天生就是线程安全的。当一个线程对一个共享数据执行一个原子写操作，那么其他线程无法读取这个正在被修改的线程。相反地，当一个线程对共享数据执行一个原子读操作，它会读取在单一时间的完整数据。现在并没有方法可使线程绕过原子操作，因此就不会有数据冲突出现了。</p>
+<p>坏消息是有大量的操作是非原子性的。即使像<code>x = 1</code>这样微不足道的操作，在有些硬件中，也由多个原子组成，这使得整个任务本身是非原子性的。所以当一个线程读取<code>x</code>时，另一个线程执行<code>x = 1</code>时，就会触发数据冲突。</p>
+<h2 id="紊乱情况的根本原因"><a href="#紊乱情况的根本原因" class="headerlink" title="紊乱情况的根本原因"></a>紊乱情况的根本原因</h2><p>抢占式多线程管理给了操作系统管理线程的全部权限：它可以根据先进的调度算法开启，终止和暂停线程。作为开发人员，你无法控制执行的时间和命令。事实上，以下这样简单的命令并没有什么保障：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">writer_thread.start()</span><br><span class="line">reader_thread.start()</span><br></pre></td></tr></table></figure>
+
+<p>以特定的顺序开启这两个线程。运行这个程序几次后，你就会发现他的行为每次运行都不一样：有时候写线程先执行，有时候读线程先执行。如果你需要写线程总是在读线程运行前执行，你需要解决这种紊乱情况。</p>
+<p>这种行为被称为不确定性：每次输出都不同，并且你无法预测结果。调试一个会被紊乱情况影响的程序是非常烦人的，因为你无法可控地复现问题。</p>
+<h2 id="告诉线程如何相处：并发控制"><a href="#告诉线程如何相处：并发控制" class="headerlink" title="告诉线程如何相处：并发控制"></a>告诉线程如何相处：并发控制</h2><p>数据冲突和紊乱情况都是现实世界中真实存在的：有的人甚至因为这些原因失去生命。容纳两个或以上线程的艺术被称为<strong>并发控制</strong>：操作系统和编程语言提供了几种解决方案来处理这些问题。几个最主要的包括：</p>
+<ul>
+<li><strong>同步</strong> —— 一种方法保证资源在同一时间只被一个线程使用。同步就是使你代码中的一部分是”protected”状态这样两个或更多的并发线程不能同时执行它，进而破坏了你共享数据；</li>
+<li><strong>原子操作</strong> —— 多亏了操作系统提供的特殊指令，一群非原子操作(就像之前提到的例子)可以被转化成一个原子操作。这种方法使共享数据保持在一个可用状态，不管其他线程如何去使用这些共享数据。</li>
+<li><strong>不可变数据</strong> —— 共享数据被设置成不可变，什么都无法改变它：线程只被允许从中读取数据，解决了问题的根本原因。据我们所知，只要不被修改，线程可以安全地从一个内存地址中读取数据。这是函数式编程的基本原理。</li>
+</ul>
+<p>我将在这个关于并发的迷你系列的下一集中介绍所有这些引人入胜的主题。 敬请关注！</p>
+<h2 id="参考内容"><a href="#参考内容" class="headerlink" title="参考内容"></a>参考内容</h2><p>8 bit avenue - <a href="https://www.8bitavenue.com/difference-between-multiprogramming-multitasking-multithreading-and-multiprocessing/" target="_blank" rel="noopener">Difference between Multiprogramming, Multitasking, Multithreading and Multiprocessing</a></p>
+<p>Wikipedia - <a href="https://en.wikipedia.org/wiki/Inter-process_communication" target="_blank" rel="noopener">Inter-process communication</a></p>
+<p>Wikipedia - <a href="https://en.wikipedia.org/wiki/Process_(computing)" target="_blank" rel="noopener">Process (computing)</a></p>
+<p>Wikipedia - <a href="https://en.wikipedia.org/wiki/Concurrency_(computer_science)" target="_blank" rel="noopener">Concurrency (computer science)</a></p>
+<p>Wikipedia - <a href="https://en.wikipedia.org/wiki/Parallel_computing" target="_blank" rel="noopener">Parallel computing</a></p>
+<p>Wikipedia - <a href="https://en.wikipedia.org/wiki/Multithreading_(computer_architecture)" target="_blank" rel="noopener">Multithreading (computer architecture)</a></p>
+<p>Stackoverflow - <a href="https://stackoverflow.com/questions/1713554/threads-processes-vs-multithreading-multicore-multiprocessor-how-they-are" target="_blank" rel="noopener">Threads &amp; Processes Vs MultiThreading &amp; Multi-Core/MultiProcessor: How they are mapped?</a></p>
+<p>Stackoverflow - <a href="https://stackoverflow.com/questions/19225859/difference-between-core-and-processor" target="_blank" rel="noopener">Difference between core and processor?</a></p>
+<p>Wikipedia - <a href="https://en.wikipedia.org/wiki/Thread_(computing)" target="_blank" rel="noopener">Thread (computing)</a></p>
+<p>Wikipedia - <a href="https://en.wikipedia.org/wiki/Computer_multitasking" target="_blank" rel="noopener">Computer multitasking</a></p>
+<p>Ibm.com - <a href="https://www.ibm.com/support/knowledgecenter/en/ssw_aix_71/com.ibm.aix.genprogc/benefits_threads.htm" target="_blank" rel="noopener">Benefits of threads</a></p>
+<p>Haskell.org - <a href="https://wiki.haskell.org/Parallelism_vs._Concurrency" target="_blank" rel="noopener">Parallelism vs. Concurrency</a></p>
+<p>Stackoverflow - <a href="https://stackoverflow.com/questions/16116952/can-multithreading-be-implemented-on-a-single-processor-system" target="_blank" rel="noopener">Can multithreading be implemented on a single processor system?</a></p>
+<p>HowToGeek - <a href="https://www.howtogeek.com/194756/cpu-basics-multiple-cpus-cores-and-hyper-threading-explained/" target="_blank" rel="noopener">CPU Basics: Multiple CPUs, Cores, and Hyper-Threading Explained</a></p>
+<p>Oracle.com - <a href="https://docs.oracle.com/cd/E19205-01/820-0619/geojs/index.html" target="_blank" rel="noopener">1.2 What is a Data Race?</a></p>
+<p>Jaka’s corner - <a href="http://jakascorner.com/blog/2016/01/data-races.html" target="_blank" rel="noopener">Data race and mutex</a></p>
+<p>Wikipedia - <a href="https://en.wikipedia.org/wiki/Thread_safety" target="_blank" rel="noopener">Thread safety</a></p>
+<p>Preshing on Programming - <a href="https://preshing.com/20130618/atomic-vs-non-atomic-operations/" target="_blank" rel="noopener">Atomic vs. Non-Atomic Operations</a></p>
+<p>Wikipedia - <a href="https://en.wikipedia.org/wiki/Green_threads" target="_blank" rel="noopener">Green threads</a></p>
+<p>Stackoverflow - <a href="https://stackoverflow.com/questions/617787/why-should-i-use-a-thread-vs-using-a-process" target="_blank" rel="noopener">Why should I use a thread vs. using a process?</a></p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/多线程/" rel="tag"># 多线程</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/04/29/【译】当我开始使用React的时候，我希望自己知道这些技巧/" rel="next" title="【译】当我开始使用React的时候，我希望自己知道这些技巧">
+                  <i class="fa fa-chevron-left"></i> 【译】当我开始使用React的时候，我希望自己知道这些技巧
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/06/15/【译】Java中的线程间通信/" rel="prev" title="【译】Java中的线程间通信">
+                  【译】Java中的线程间通信 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="comments"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-03-19-WechatIMG1.jpeg"
+      alt="ZhangXin">
+  <p class="site-author-name" itemprop="name">ZhangXin</p>
+  <div class="site-description motion-element" itemprop="description">Fusce porttitor consectetur venenatis.</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">tags</span>
+        
+      </div>
+    
+  </nav>
+
+
+  <div class="links-of-blogroll motion-element links-of-blogroll-block">
+    <div class="links-of-blogroll-title">
+      <i class="fa  fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://blog.lovem.fun/" title="http://blog.lovem.fun/" rel="noopener" target="_blank">进击的学霸的博客</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://code-fe.lovem.fun/" title="http://code-fe.lovem.fun/" rel="noopener" target="_blank">前端资源共享</a>
+        </li>
+      
+    </ul>
+  </div>
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#进程和线程：用正确的方式命名"><span class="nav-number">1.</span> <span class="nav-text">进程和线程：用正确的方式命名</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#进程和线程的区别"><span class="nav-number">1.1.</span> <span class="nav-text">进程和线程的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#绿色线程，纤程"><span class="nav-number">1.2.</span> <span class="nav-text">绿色线程，纤程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程用来做什么"><span class="nav-number">2.</span> <span class="nav-text">线程用来做什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#是什么使并发和并行可行"><span class="nav-number">3.</span> <span class="nav-text">是什么使并发和并行可行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#多线程应用运行在单核环境下：这真的合理吗？"><span class="nav-number">3.1.</span> <span class="nav-text">多线程应用运行在单核环境下：这真的合理吗？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程越多，问题越多"><span class="nav-number">4.</span> <span class="nav-text">线程越多，问题越多</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#线程安全概念"><span class="nav-number">4.1.</span> <span class="nav-text">线程安全概念</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据冲突的根本原因"><span class="nav-number">5.</span> <span class="nav-text">数据冲突的根本原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#紊乱情况的根本原因"><span class="nav-number">6.</span> <span class="nav-text">紊乱情况的根本原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#告诉线程如何相处：并发控制"><span class="nav-number">7.</span> <span class="nav-text">告诉线程如何相处：并发控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考内容"><span class="nav-number">8.</span> <span class="nav-text">参考内容</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZhangXin</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.3.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="Total Visitors">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="Total Views">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+
+    
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.3.0"></script>
+  <script src="/js/motion.js?v=7.3.0"></script>
+
+
+  <script src="/js/affix.js?v=7.3.0"></script>
+  <script src="/js/schemes/pisces.js?v=7.3.0"></script>
+
+
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
+    
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', function() {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'P3xRz9HwuMs9MdlF58Xp7AEs-gzGzoHsz',
+    appKey: 'poBl7UWCx83LkaBuBStVNFWG',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>
