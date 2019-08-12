@@ -4,17 +4,17 @@
 
 
 
-<html class="theme-next gemini use-motion" lang="en">
+<html class="theme-next pisces use-motion" lang="en">
 <head>
   <meta charset="UTF-8">
 <meta name="generator" content="Hexo 3.9.0">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
-  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/icons8-elektrovieh-16.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icons8-pikachu-pokemon-96.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/icons8-pikachu-pokemon-48.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/icons8-pikachu-pokemon-48.png?v=7.3.0" color="#222">
 
 <link rel="stylesheet" href="/css/main.css?v=7.3.0">
 
@@ -26,7 +26,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Pisces',
     version: '7.3.0',
     exturl: false,
     sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
@@ -282,29 +282,51 @@
 
       
           
-            <p>
-              环境：Jenkins2.73.2 
-windows7
-centos7 
-jdk1.8 
-Jenkins的安装进入https://jenkins.io/download/下载Jenkins，我这里选择的是Windows安装版。 
-安装后Jenkins已启动，第一次访问Jenkins时，会自动生成一个随机口令，口令在（Jenkins的安装目录）D:\Program\Jenkins\secrets路径下的initialAdminPassword文件中，在浏览器输入localhost:8080，粘贴口令进入安装界面。可以选择推荐安装或自选安装组件。 
-（如果插件下载失败请自行科学上网并在Jenkins中配置proxy） 
-在第一次使用前，需要在系统管理中配置jdk、maven、git、svn等，如果并没有安装可以选择自动安装，如果已经安装在相应的HOME中填写自己的安装路径即可。 
-配置publish over ssh生成ssh key ： ssh-keygen -t rsa 
-进入/root/.ssh 
-将id_rsa.pub的内容复制到authorized_keys中 ： cp id_rs
-              ...
-            </p>
-          <!--noindex-->
+            <h2 id="环境："><a href="#环境：" class="headerlink" title="环境："></a>环境：</h2><p>Jenkins2.73.2 </p>
+<p>windows7</p>
+<p>centos7 </p>
+<p>jdk1.8 </p>
+<h2 id="Jenkins的安装"><a href="#Jenkins的安装" class="headerlink" title="Jenkins的安装"></a>Jenkins的安装</h2><p>进入<a href="https://jenkins.io/download/" target="_blank" rel="noopener">https://jenkins.io/download/</a>下载Jenkins，我这里选择的是Windows安装版。 </p>
+<p>安装后Jenkins已启动，第一次访问Jenkins时，会自动生成一个随机口令，口令在（Jenkins的安装目录）D:\Program\Jenkins\secrets路径下的initialAdminPassword文件中，在浏览器输入localhost:8080，粘贴口令进入安装界面。可以选择推荐安装或自选安装组件。 </p>
+<p>（如果插件下载失败请自行科学上网并在Jenkins中配置proxy） </p>
+<p>在第一次使用前，需要在系统管理中配置jdk、maven、git、svn等，如果并没有安装可以选择自动安装，如果已经安装在相应的HOME中填写自己的安装路径即可。 </p>
+<h2 id="配置publish-over-ssh"><a href="#配置publish-over-ssh" class="headerlink" title="配置publish over ssh"></a>配置publish over ssh</h2><p>生成ssh key ： ssh-keygen -t rsa </p>
+<p>进入/root/.ssh </p>
+<p>将id_rsa.pub的内容复制到authorized_keys中 ： cp id_rsa.pub anthorized_keys </p>
+<p>将id_rsa中的内容复制到publish over ssh配置的key中（也可以填写私钥文件的路径，同时设置key优先级更高） </p>
+<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2018-12-14-085409.png" alt></p>
+<p>passphrase为生成ssh key时所填写的密码，如果创建ssh key时密码为空就不填即可。</p>
+<p>填写SSH Servers</p>
+<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2018-12-14-085747.png" alt></p>
+<p>name为一个server的名称 </p>
+<p>hostname为主机名或IP </p>
+<p>username为SSH服务使用的用户 </p>
+<p>Remote Derictory为插件传送文件的目录，必须真实存在且username用户拥有此目录的权限 </p>
+<h2 id="构建项目"><a href="#构建项目" class="headerlink" title="构建项目"></a>构建项目</h2><p>在Jenkins首页选择新建，构建一个maven项目。</p>
+<h3 id="源码管理"><a href="#源码管理" class="headerlink" title="源码管理"></a>源码管理</h3><p>选择git（如果用的其他管理软件选择相应的，没有选项请下载相应的插件），填入项目地址，默认使用的master分支，如果需要口令，在credentials中添加用户名/密码，或者使用SSH key。</p>
+<h3 id="构建触发器"><a href="#构建触发器" class="headerlink" title="构建触发器"></a>构建触发器</h3><p>触发器指定了触发一次构建的条件。一般使用定时触发，选择Poll SCM，参数配置请参考<a href="http://blog.csdn.net/xueyingqi/article/details/53216506" target="_blank" rel="noopener">http://blog.csdn.net/xueyingqi/article/details/53216506</a></p>
+<h3 id="Pre-Steps"><a href="#Pre-Steps" class="headerlink" title="Pre Steps"></a>Pre Steps</h3><p>构建前操作</p>
+<p>本例中在构建前停止了所有名字中带Java的进程</p>
+<p>选择Send files or execute commands over SSH </p>
+<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2018-12-14-085854.png" alt></p>
+<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2018-12-14-085944.png" alt></p>
+<h3 id="build"><a href="#build" class="headerlink" title="build"></a>build</h3><p>Root POM： 默认pom.xml，如果pom文件不在根目录，则带上子目录填写。</p>
+<p>Goals and options ： 填写需要执行的mvn命令： package  Jenkins将执行 mvn package</p>
+<h3 id="post-step"><a href="#post-step" class="headerlink" title="post step"></a>post step</h3><p>发布操作</p>
+<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2018-12-14-090100.png" alt></p>
+<p>依旧选择Send files or execute commands over SSH  </p>
+<p>Name为在系统配置中配置好的SSH server的名称</p>
+<p>Source files为要发送到远程机的文件路径，相对Jenkins的workspace目录</p>
+<p>Remove directory为复制时要过滤的目录</p>
+<p>Remote directory为将要发送到远程机上的目录，不存在将自动创建。</p>
+<p>Exec command为将在远程机上执行的命令或脚本。</p>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ol>
+<li>如果是在Windows下写的sh脚本，在Linux下运行会出现乱码，使用doc2unix filename命令转换或在每条命令后加个空格，也可以用UE编辑器转换，最好直接在Linux环境下写脚本。</li>
+<li>当shell脚本在远程机上直接运行无问题，使用Jenkins调用却无效时，很有可能是环境变量为同步，在脚本中加上一条source profile </li>
+<li>Tomcat或运行jar最好后台运行 </li>
+</ol>
+
           
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/08/22/Jenkins配置/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
         
       
     </div>
@@ -400,40 +422,129 @@ Jenkins的安装进入https://jenkins.io/download/下载Jenkins，我这里选�
 
       
           
-            <p>
-              中文技术文档的写作规范最近工作中有很多文档编写工作，故在此总结记录中文技术文档的写作规范，本文主要参考阮一峰总结的中文技术文档的写作规范在今后的工作中注意符合规范，提高文档质量。
-标题规范层级标题一共分为四个层级。
+            <h1 id="中文技术文档的写作规范"><a href="#中文技术文档的写作规范" class="headerlink" title="中文技术文档的写作规范"></a>中文技术文档的写作规范</h1><p>最近工作中有很多文档编写工作，故在此总结记录中文技术文档的写作规范，本文主要参考阮一峰总结的<a href="https://github.com/ruanyf/document-style-guide" target="_blank" rel="noopener">中文技术文档的写作规范</a>在今后的工作中注意符合规范，提高文档质量。</p>
+<h2 id="标题规范"><a href="#标题规范" class="headerlink" title="标题规范"></a>标题规范</h2><h3 id="层级"><a href="#层级" class="headerlink" title="层级"></a>层级</h3><p>标题一共分为四个层级。</p>
+<ul>
+<li>一级标题：本文的文章标题</li>
+<li>二级标题：文中主要部分的大标题</li>
+<li>三级标题：二级标题下某一部分的小标题</li>
+<li>四级标题：三级标题下某一部分的小标题</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># 一级标题</span></span><br><span class="line"><span class="section">## 二级标题</span></span><br><span class="line"><span class="section">### 三级标题</span></span><br><span class="line"><span class="section">#### 四级标题</span></span><br></pre></td></tr></table></figure>
 
-一级标题：本文的文章标题
-二级标题：文中主要部分的大标题
-三级标题：二级标题下某一部分的小标题
-四级标题：三级标题下某一部分的小标题
+<h3 id="原则"><a href="#原则" class="headerlink" title="原则"></a>原则</h3><ol>
+<li>一级标题下不能直接出现三级标题</li>
+<li>标题要避免孤立编号，即同级标题只有一个</li>
+<li>下级标题的名称要避免与上级标题相同</li>
+<li>尽量避免出现四级标题，保持文章层级简单清晰，三级标题下的并列内容建议使用列表</li>
+</ol>
+<h2 id="文本规范"><a href="#文本规范" class="headerlink" title="文本规范"></a>文本规范</h2><h3 id="字间距"><a href="#字间距" class="headerlink" title="字间距"></a>字间距</h3><p>全角中文字符与半角英文字符之间应有一个半角空格。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">错误：本文介绍本项目在centos系统环境下的安装。</span><br><span class="line"></span><br><span class="line">正确：本文介绍本项目在 centos 系统环境下的安装。</span><br></pre></td></tr></table></figure>
 
-示例：
-# 一级标题## 二级标题### 三级标题#### 四级标题
+<p>全角中文字符与半角阿拉伯数字之间是否有半角空格都可以，当风格要保持一致。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">错误：本文一共介绍了25种接口的使用方法，其中包括 5 种查询接口。</span><br><span class="line"></span><br><span class="line">正确：本文一共介绍了25种接口的使用方法，其中包括5种查询接口。</span><br><span class="line"></span><br><span class="line">正确：本文一共介绍了 25 种接口的使用方法，其中包括 5 种查询接口。</span><br></pre></td></tr></table></figure>
 
-原则
-一级标题下不能直接出现三级标题
-标题要避免孤立编号，即同级标题只有一个
-下级标题的名称要避免与上级标题相同
-尽量避免出现四级标题，保持文章层级简单清晰，三级标题下的并列内容建议使用列表
+<p>半角的百分号被视为阿拉伯数字。</p>
+<p>英文单位与之前的阿拉伯数字之间没有空格。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">错误：本程序需要磁盘至少有 500 MB 的空闲空间。</span><br><span class="line"></span><br><span class="line">正确：本程序需要磁盘至少有 500MB 的空闲空间。</span><br></pre></td></tr></table></figure>
 
-文本规范字间距全角中文字符与半角英文字符之间应有一个半角空格。
-错误：本文介绍本项目在centos系统环境下的安装。正确：本文介绍本项目在 centos 系统环境下的安装。
+<p>半角的英文字符和半角的阿拉伯数字，与全角标点之间没有空格。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">错误：推荐使用系统为Ubuntu 。</span><br><span class="line"></span><br><span class="line">正确：推荐使用系统为Ubuntu。</span><br></pre></td></tr></table></figure>
 
-全角中文字符与半角阿拉伯数字之间是否有半角空格都可以，当风格要保持一致。
-错误：本文一共介绍了25种接口的使用方法，其中包括 5 种查询接口。正确：本文一共介绍了25种接口的使用方法，其中包括5种查询接口
-              ...
-            </p>
-          <!--noindex-->
+<h3 id="句子"><a href="#句子" class="headerlink" title="句子"></a>句子</h3><p>1、避免使用长句，句子内部没有标点的情况下应避免超过40个字；在使用逗号时，应避免超过100个字或正文的三行。</p>
+<p>2、尽量使用简单句，避免使用复合句。</p>
+<h3 id="写作风格"><a href="#写作风格" class="headerlink" title="写作风格"></a>写作风格</h3><p>1、尽量使用主动语态，避免使用被动语态。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">错误：如果相关依赖未被安装，</span><br><span class="line"></span><br><span class="line">正确：如果还未安装相关依赖，</span><br></pre></td></tr></table></figure>
+
+<p>2、不使用非正式的语言描述。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">错误：黑骑士掉的戟特别好用，伤害爆炸。</span><br><span class="line"></span><br><span class="line">正确：《黑暗之魂》中黑骑士掉落的武器剑刃戟伤害属性优秀，使用动作流畅，是中前期推荐的武器之一。</span><br></pre></td></tr></table></figure>
+
+<p>3、不使用冷僻，晦涩的词语或者文言文的词语，要使用现代汉语的常用表达方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">错误：用词准确为上，华丽为中，生僻则下。</span><br><span class="line"></span><br><span class="line">正确：在选择用词时，首先要考虑用词准确。</span><br></pre></td></tr></table></figure>
+
+<p>4、正确使用“地”、“得”和“的”。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">形容词 + 的 + 名词：开心的笑容</span><br><span class="line"></span><br><span class="line">副词 + 地 + 动词：开心地笑了</span><br><span class="line"></span><br><span class="line">动词 + 得 + 副词：笑得很开心</span><br></pre></td></tr></table></figure>
+
+<p>5、使用“其”、“该”、“此”等代词时，要明确指代的内容，保证只有一个含义。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">错误：从管理系统可以监视中继系统和受其直接控制的分配系统。</span><br><span class="line"></span><br><span class="line">正确：从管理系统可以监视两个系统：中继系统和受中继系统直接控制的分配系统。</span><br></pre></td></tr></table></figure>
+
+<p>6、名词前应避免使用过多的形容词。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">错误：此设备的使用必须在接受过本公司举办的正式的设备培训的技师的指导下进行。</span><br><span class="line"></span><br><span class="line">正确：此设备必须在技师的指导下使用，且指导技师必须接受过由本公司举办的正式设备培训。</span><br></pre></td></tr></table></figure>
+
+<p>7、能使用肯定句描述时，应尽量避免使用否定句。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">错误：请确认相关插件没有被错误安装。</span><br><span class="line"></span><br><span class="line">正确：请确认相关插件安装正确。</span><br></pre></td></tr></table></figure>
+
+<p>8、避免使用双重否定。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">错误：没有删除权限的用户，不能删除此文件。</span><br><span class="line"></span><br><span class="line">正确：用户必须拥有删除权限，才能删除此文件。</span><br></pre></td></tr></table></figure>
+
+<h2 id="段落"><a href="#段落" class="headerlink" title="段落"></a>段落</h2><h3 id="原则-1"><a href="#原则-1" class="headerlink" title="原则"></a>原则</h3><ol>
+<li>一个段落只有一个主题，或一个中心句子</li>
+<li>段落的中心句子放在段首，对全段内容进行概述</li>
+<li>一个段落的长度不能超过七行，最佳段落长度小于等于四行</li>
+<li>段落的句子语气要使用陈述和肯定语气，避免使用感叹语气</li>
+<li>段落之间使用一个空行隔开</li>
+<li>段落开头不要留出空白字符</li>
+</ol>
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><p>在引用第三方时应注明出处。如果为全文转载，应在开头注明作者和出处，并附上原文链接。使用了外部图片时应在图片下方或文末标明来源。</p>
+<h2 id="数值"><a href="#数值" class="headerlink" title="数值"></a>数值</h2><h3 id="半角数字"><a href="#半角数字" class="headerlink" title="半角数字"></a>半角数字</h3><p>数字一律使用半角形式，不得使用全角形式。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">错误： 这件商品的价格是１０００元。</span><br><span class="line"></span><br><span class="line">正确： 这件商品的价格是 1000 元。</span><br></pre></td></tr></table></figure>
+
+<h3 id="千分号"><a href="#千分号" class="headerlink" title="千分号"></a>千分号</h3><p>数值为千位以上，应添加千分号（半角逗号）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">XXX 公司的实收资本为 RMB1,258,000。</span><br></pre></td></tr></table></figure>
+
+<p>对于 4 ～ 6 位的数值，千分号是选用的，比如<code>1000</code>和<code>1,000</code>都可以接受。对于7位及以上的数值，千分号是必须的。</p>
+<p>多位小数要从小数点后从左向右添加千分号，比如<code>4.234,345</code>。</p>
+<h3 id="货币"><a href="#货币" class="headerlink" title="货币"></a>货币</h3><p>货币应为阿拉伯数字，并在数字前写出货币符号，或在数字后写出货币中文名称。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$1,000</span><br><span class="line">1,000 美元</span><br></pre></td></tr></table></figure>
+
+<h3 id="数值范围"><a href="#数值范围" class="headerlink" title="数值范围"></a>数值范围</h3><p>表示数值范围时，用<code>～</code>连接。参见《标点符号》一节的“连接号”部分。</p>
+<p>带有单位或百分号时，两个数字都要加上单位或百分号，不能只加后面一个。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">错误：132～234kg</span><br><span class="line">正确：132kg～234kg</span><br><span class="line"></span><br><span class="line">错误：67～89%</span><br><span class="line">正确：67%～89%</span><br></pre></td></tr></table></figure>
+
+<h3 id="变化程度的表示法"><a href="#变化程度的表示法" class="headerlink" title="变化程度的表示法"></a>变化程度的表示法</h3><p>数字的增加要使用“增加了”、“增加到”。“了”表示增量，“到”表示定量。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">增加到过去的两倍</span><br><span class="line">（过去为一，现在为二）</span><br><span class="line"></span><br><span class="line">增加了两倍</span><br><span class="line">（过去为一，现在为三）</span><br></pre></td></tr></table></figure>
+
+<p>数字的减少要使用“降低了”、“降低到”。“了”表示增量，“到”表示定量。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">降低到百分之八十</span><br><span class="line">（定额是一百，现在是八十）</span><br><span class="line"></span><br><span class="line">降低了百分之八十</span><br><span class="line">（原来是一百，现在是二十）</span><br></pre></td></tr></table></figure>
+
+<p>不能用“降低N倍”或“减少N倍”的表示法，要用“降低百分之几”或“减少百分之几”。因为减少（或降低）一倍表示数值原来为一百，现在等于零。</p>
+<h2 id="标点"><a href="#标点" class="headerlink" title="标点"></a>标点</h2><h3 id="原则-2"><a href="#原则-2" class="headerlink" title="原则"></a>原则</h3><ol>
+<li>中文语句的标点符号使用全角符号。</li>
+<li>如果一个整句为英文，则使用英文/半角符号。</li>
+<li>句号、问号、叹号、逗号、顿号、分号和冒号不得出现在一行之首。</li>
+</ol>
+<h3 id="句号"><a href="#句号" class="headerlink" title="句号"></a>句号</h3><p>中文语句中的结尾处应该用全角句号（<code>。</code>）。</p>
+<p>句子末尾用括号加注时，句号应在括号之外。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">错误：关于文件的输出，请参照第 1.3 节（见第 26 页。）</span><br><span class="line"></span><br><span class="line">正确：关于文件的输出，请参照第 1.3 节（见第 26 页）。</span><br></pre></td></tr></table></figure>
+
+<h3 id="逗号"><a href="#逗号" class="headerlink" title="逗号"></a>逗号</h3><p>逗号<code>，</code>表示句子内部的一般性停顿。</p>
+<p>注意避免“一逗到底”，即整个段落除了结尾，全部停顿都使用逗号。</p>
+<h3 id="顿号"><a href="#顿号" class="headerlink" title="顿号"></a>顿号</h3><p>中文句子中的并列词使用全角顿号（<code>、</code>）隔开，英文句子中，并列词语之间使用半角逗号（<code>,</code>）隔开。</p>
+<h3 id="引号"><a href="#引号" class="headerlink" title="引号"></a>引号</h3><p>引用时，应该使用全角双引号（<code>“ ”</code>），注意前后双引号不同。引号里面还要用引号时，外面一层用双引号，里面一层用单引号（<code>‘ ’</code>）。</p>
+<h3 id="圆括号"><a href="#圆括号" class="headerlink" title="圆括号"></a>圆括号</h3><p> 补充说明时，使用全角圆括号<code>（）</code>，括号前后不加空格。</p>
+<h3 id="冒号"><a href="#冒号" class="headerlink" title="冒号"></a>冒号</h3><p>全角冒号（<code>：</code>）常用在需要解释的词语后边，引出解释和说明。</p>
+<p>表示时间时，应使用半角冒号（<code>:</code>）。</p>
+<h3 id="省略号"><a href="#省略号" class="headerlink" title="省略号"></a>省略号</h3><p>省略号<code>……</code>表示语句未完、或者语气的不连续。它占两个汉字空间、包含六个省略点，不要使用<code>。。。</code>或<code>...</code>等非标准形式。</p>
+<p>省略号不应与“等”这个词一起使用。</p>
+<h3 id="连接号"><a href="#连接号" class="headerlink" title="连接号"></a>连接号</h3><p>连接号用于连接两个类似的词。</p>
+<p>以下场合应该使用直线连接号（<code>-</code>），占一个半角字符的位置。</p>
+<ul>
+<li>两个名词的复合</li>
+<li>图表编号</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">例句：氧化-还原反应</span><br><span class="line"></span><br><span class="line">例句：图 1-1</span><br></pre></td></tr></table></figure>
+
+<p>以下场合应该使用波浪连接号（<code>～</code>），占一个全角字符的位置。</p>
+<ul>
+<li>数值范围（例如日期、时间或数字）</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">例句：2009 年～2011 年</span><br></pre></td></tr></table></figure>
+
+<p>注意，波浪连接号前后两个值都应该加上单位。</p>
+<p>波浪连接号也可以用汉字“至”代替。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">例句：周围温度：-20°C 至 -10°C</span><br></pre></td></tr></table></figure>
           
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/08/09/中文技术文档的写作规范/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
         
       
     </div>
@@ -537,25 +648,21 @@ Jenkins的安装进入https://jenkins.io/download/下载Jenkins，我这里选�
 
       
           
-            <p>
-              初识Docker中的Compose项目Compose简介Compose是docker官方的开源项目，负责对docker集群的快速编排。Compose是定义和运行多个docker容器的应用。一般情况下我们可以通过一个dockerfile来很方便的定义个单独的应用容器，但是在实际使用中我们常常需要多个容器相互配合来完成工作。Compose允许用户通过一个单独的docker-compose.yml模板文件来定义一组相关联的容器为一个project（项目）。在Compose中有两个概念：
+            <h1 id="初识Docker中的Compose项目"><a href="#初识Docker中的Compose项目" class="headerlink" title="初识Docker中的Compose项目"></a>初识Docker中的Compose项目</h1><h2 id="Compose简介"><a href="#Compose简介" class="headerlink" title="Compose简介"></a>Compose简介</h2><p>Compose是docker官方的开源项目，负责对docker集群的快速编排。Compose是定义和运行多个docker容器的应用。一般情况下我们可以通过一个dockerfile来很方便的定义个单独的应用容器，但是在实际使用中我们常常需要多个容器相互配合来完成工作。<br>Compose允许用户通过一个单独的docker-compose.yml模板文件来定义一组相关联的容器为一个project（项目）。<br>在Compose中有两个概念：</p>
+<ul>
+<li>service（服务），指的是一个应用的容器，实际上可以包括多个运行相同镜像的容器实例。</li>
+<li>project（项目），在docker-compose.yml中定义的一组关联的应用容器组成的一个完整的业务单元。</li>
+</ul>
+<h2 id="Compose的安装"><a href="#Compose的安装" class="headerlink" title="Compose的安装"></a>Compose的安装</h2><p>Compose可以通过Python的pip安装，也可以直接下载二进制文件使用。<br>docker-mac，docker-windows中自带docker-compose的二进制文件，可以直接使用。<br>Linux系统使用pip安装或直接在官方处下载编译好的二进制文件。</p>
+<h3 id="二进制包"><a href="#二进制包" class="headerlink" title="二进制包"></a>二进制包</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> sudo curl -L https://github.com/docker/compose/releases/download/1.17.1/docker-compose-uname -s-uname -m &gt; /usr/local/bin/docker-compose</span><br><span class="line"><span class="meta">$</span> sudo chmod +x /usr/local/bin/docker-compose</span><br></pre></td></tr></table></figure>
 
-service（服务），指的是一个应用的容器，实际上可以包括多个运行相同镜像的容器实例。
-project（项目），在docker-compose.yml中定义的一组关联的应用容器组成的一个完整的业务单元。
+<h3 id="pip安装"><a href="#pip安装" class="headerlink" title="pip安装"></a>pip安装</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> sudo pip install -U docker-compose</span><br></pre></td></tr></table></figure>
 
-Compose的安装Compose可以通过Python的pip安装，也可以直接下载二进制文件使用。docker-mac，docker-windows中自带docker-compose的二进制文件，可以直接使用。Linux系统使用pip安装或直接在官方处下载编译好的二进制文件。
-二进制包$ sudo cu
-              ...
-            </p>
-          <!--noindex-->
+<h3 id="容器中执行"><a href="#容器中执行" class="headerlink" title="容器中执行"></a>容器中执行</h3><p>Compose是一个Python应用，因此也可以通过容器来直接执行。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> curl -L https://github.com/docker/compose/releases/download/1.8.0/run.sh &gt; /usr/local/bin/docker-compose</span><br><span class="line"><span class="meta">$</span> chmod +x /usr/local/bin/docker-compose</span><br></pre></td></tr></table></figure>
+
+
           
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/02/12/Docker中的Compose项目/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
         
       
     </div>
@@ -659,21 +766,20 @@ Compose的安装Compose可以通过Python的pip安装，也可以直接下载二
 
       
           
-            <p>
-              在工作中有了通过html来生成PDF并下载的需求。用flying saucer + itext可以实现。下面简单介绍下使用及注意事项。
-示例如下：
-引入依赖&lt;dependency&gt;  	&lt;groupId&gt;com.itextpdf&lt;/groupId&gt;  	&lt;artifactId&gt;itextpdf&lt;/artifactId&gt;  	&lt;version&gt;5.4.2&lt;/version&gt;  &lt;/dependency&gt;  &lt;dependency&gt;  	&lt;groupId&gt;com.itextpdf.tool&lt;/groupId&gt;  	&lt;artifactId&gt;xmlworker&lt;/artifactId&gt;  	&lt;version&gt;5.4.1&lt;/version&gt;  &lt;/dependency&gt;  &lt;!-- pdf输出中文支持 --&gt;  &lt;dependency&gt;  	&lt;groupId&gt;com.it
-              ...
-            </p>
-          <!--noindex-->
+            <p>在工作中有了通过html来生成PDF并下载的需求。用flying saucer + itext可以实现。下面简单介绍下使用及注意事项。</p>
+<p>示例如下：</p>
+<h1 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span>  </span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.itextpdf<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>  </span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>itextpdf<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>  </span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>5.4.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span>  </span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span>  </span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span>  </span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.itextpdf.tool<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>  </span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>xmlworker<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>  </span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>5.4.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span>  </span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span>  </span><br><span class="line"><span class="comment">&lt;!-- pdf输出中文支持 --&gt;</span>  </span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span>  </span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.itextpdf<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>  </span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>itext-asian<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>  </span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>5.2.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span>  </span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- https://mvnrepository.com/artifact/org.xhtmlrenderer/flying-saucer-pdf --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.xhtmlrenderer<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flying-saucer-pdf<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>9.1.11<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="创建文件并下载"><a href="#创建文件并下载" class="headerlink" title="创建文件并下载"></a>创建文件并下载</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">downloadContract</span><span class="params">(HttpServletResponse response)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		String htmlstr = <span class="string">""</span>; <span class="comment">//html字符串</span></span><br><span class="line">		OutputStream os = response.getOutputStream();</span><br><span class="line">		ITextRenderer renderer = <span class="keyword">new</span> ITextRenderer();</span><br><span class="line">		renderer.setDocumentFromString(htmlstr);</span><br><span class="line">		<span class="comment">// 解决中文支持问题   </span></span><br><span class="line">		ITextFontResolver fontResolver = renderer.getFontResolver();</span><br><span class="line">		fontResolver.addFont(<span class="string">"/com/font/msyh.ttc"</span>, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);</span><br><span class="line">		renderer.layout();</span><br><span class="line">		ByteArrayOutputStream baos = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			renderer.createPDF(baos);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (com.lowagie.text.DocumentException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">		response.setContentType(<span class="string">"application/pdf"</span>);</span><br><span class="line">		response.setHeader(<span class="string">"Content-Disposition"</span>, <span class="string">"attachment; filename=contract.pdf"</span>);</span><br><span class="line">		baos.writeTo(os);</span><br><span class="line">		os.flush();</span><br><span class="line">		os.close();</span><br><span class="line">	&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<ol>
+<li>在使用html文件或者URL时 要用setDocument方法，直接传入的html字符串用setDocumentFromString方法。</li>
+<li>生成PDF所用的html必须以&lt;!DOCTYPE html PUBLIC “-//W3C//DTD XHTML 1.0 Transitional//EN” “<a href="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;&lt;html" target="_blank" rel="noopener">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;&lt;html</a> xmlns=”<a href="http://www.w3.org/1999/xhtml&quot;" target="_blank" rel="noopener">http://www.w3.org/1999/xhtml&quot;</a> &gt; 开头。</li>
+<li>在引入了外部字体后，要把html中的body也设置成这种字体。否则中文不会显示。</li>
+</ol>
+
           
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/02/08/生成PDF文件并下载/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
         
       
     </div>
@@ -777,20 +883,9 @@ Compose的安装Compose可以通过Python的pip安装，也可以直接下载二
 
       
           
-            <p>
-              解决ajax提交时文件下载冲突的问题由于ajax提交时无法接收流类型，导致文件无法下载，在一定要使用ajax提交时，只能先使用ajax提交完成下载前的必要操作，如文件的生成、创建，或者通过ajax返回值得到下载的URL，再模拟表单提交去请求下载URL，来达到文件下载并不刷新页面的效果。
-$('#download').on('click',function()&#123;	$.ajax(&#123;		type:'POST',		url:'/postContractstr.jspx',		contentType:'application/x-www-form-urlencoded;charset="UTF-8',		// data:&#123;htmlstr:encodeURIComponent(htmlStr)&#125;,		data:&#123;htmlstr:htmlStr&#125;,		success:function()&#123;		console.log('下载成功');		post("/downloadContract.jspx",null);		&#125;,		e
-              ...
-            </p>
-          <!--noindex-->
+            <h1 id="解决ajax提交时文件下载冲突的问题"><a href="#解决ajax提交时文件下载冲突的问题" class="headerlink" title="解决ajax提交时文件下载冲突的问题"></a>解决ajax提交时文件下载冲突的问题</h1><p>由于ajax提交时无法接收流类型，导致文件无法下载，在一定要使用ajax提交时，只能先使用ajax提交完成下载前的必要操作，如文件的生成、创建，或者通过ajax返回值得到下载的URL，再模拟表单提交去请求下载URL，来达到文件下载并不刷新页面的效果。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">'#download'</span>).on(<span class="string">'click'</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	$.ajax(&#123;</span><br><span class="line">		type:<span class="string">'POST'</span>,</span><br><span class="line">		url:<span class="string">'/postContractstr.jspx'</span>,</span><br><span class="line">		contentType:<span class="string">'application/x-www-form-urlencoded;charset="UTF-8'</span>,</span><br><span class="line">		<span class="comment">// data:&#123;htmlstr:encodeURIComponent(htmlStr)&#125;,</span></span><br><span class="line">		data:&#123;<span class="attr">htmlstr</span>:htmlStr&#125;,</span><br><span class="line">		success:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="string">'下载成功'</span>);</span><br><span class="line">		post(<span class="string">"/downloadContract.jspx"</span>,<span class="literal">null</span>);</span><br><span class="line">		&#125;,</span><br><span class="line">		error:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="string">'下载失败'</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">//模拟表单提交</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">post</span>(<span class="params">URL, PARAMS</span>) </span>&#123;        </span><br><span class="line">	<span class="keyword">var</span> temp = <span class="built_in">document</span>.createElement(<span class="string">"form"</span>);        </span><br><span class="line">	temp.action = URL;        </span><br><span class="line">	temp.method = <span class="string">"post"</span>;        </span><br><span class="line">	temp.style.display = <span class="string">"none"</span>;        </span><br><span class="line">	<span class="keyword">var</span> opt = <span class="built_in">document</span>.createElement(<span class="string">"textarea"</span>);        </span><br><span class="line">	opt.name = <span class="string">"data"</span>;        </span><br><span class="line">	opt.value = PARAMS;         </span><br><span class="line">	temp.appendChild(opt);        </span><br><span class="line">	<span class="built_in">document</span>.body.appendChild(temp);        </span><br><span class="line">	temp.submit();        </span><br><span class="line">	<span class="keyword">return</span> temp;        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
           
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/02/08/ajax文件下载/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
         
       
     </div>
@@ -930,7 +1025,7 @@ $('#download').on('click',function()&#123;	$.ajax(&#123;		type:'POST',		url:'/po
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
   <span class="post-meta-divider">|</span>
-  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.3.0</div>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.3.0</div>
 
         
 <div class="busuanzi-count">
@@ -982,7 +1077,6 @@ $('#download').on('click',function()&#123;	$.ajax(&#123;		type:'POST',		url:'/po
 
   <script src="/js/affix.js?v=7.3.0"></script>
   <script src="/js/schemes/pisces.js?v=7.3.0"></script>
-
 
 
 <script src="/js/next-boot.js?v=7.3.0"></script>
