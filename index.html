@@ -274,21 +274,24 @@
 
       
           
-            <p>在有些时候我们需要遍历List，并删除其中的指定元素。这时候我们可能会犯以下错误：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; list.size(); i++) &#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="string">"a"</span>.equals(list.get(i))) &#123;</span><br><span class="line">    list.remove(i);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+            <p>
+              在有些时候我们需要遍历List，并删除其中的指定元素。这时候我们可能会犯以下错误：
+for (int i = 0; i &lt; list.size(); i++) &#123;  if ("a".equals(list.get(i))) &#123;    list.remove(i);  &#125;&#125;
 
-<p>这样删除的问题在于，如果集合中有多个需要删除的元素，会发生并没有完全删除的问题。</p>
-<p>如果使用增强for循环呢，如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(String element : list)&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="string">"a"</span>.equals(element)) &#123;</span><br><span class="line">    list.remove(element);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>em…也不行，会报错。</p>
-<p>在遇到这种情况的时候，推荐使用迭代器来遍历删除。</p>
-<p>代码如下:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Iterator&lt;Student&gt; iterator = list.iterator();</span><br><span class="line">  <span class="keyword">while</span> (iterator.hasNext()) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="string">"a"</span>.equals(iterator.next())) &#123;</span><br><span class="line">      iterator.remove();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>或者使用removeIf：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list.removeIf(s -&gt; s.equals(<span class="string">"a"</span>));</span><br></pre></td></tr></table></figure>
+这样删除的问题在于，如果集合中有多个需要删除的元素，会发生并没有完全删除的问题。
+如果使用增强for循环呢，如下：
+for(String element : list)&#123;  if ("a".equals(element)) &#123;    list.remove(
+              ...
+            </p>
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/07/17/Java-List删除指定元素/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
@@ -384,111 +387,26 @@
 
       
           
-            <p>尽管大多数情况下，每个子线程都只需要完成他们自己的任务，但是有时候我们可能希望多个线程共同协作来执行一个任务，这就涉及到了线程间的通信。</p>
-<p>本文要讨论如下的方法和类：thread.join(), object.wait(), object.notify(), CountdownLatch, Cyclicbarrier, FutureTask, Callbale等。</p>
-<p>我会用几个例子来解释如何在Java中实现线程间通信。</p>
-<blockquote>
-<ul>
-<li>如何使两个线程按一定顺序执行？</li>
-<li>如何使两个线程按特定的方式有序相交？</li>
-<li>现在有个四个线程：A, B, C和D(直到A, B, C被执行完了，D才会执行，并且A, B, C是同步执行的)。</li>
-<li>三个运动员分别进行准备，并且当他们全部准备好后同时开始跑步。</li>
-<li>当子线程完成任务后，将结果返回给主线程。</li>
-</ul>
-</blockquote>
-<h2 id="如何使两个线程按一定顺序执行？"><a href="#如何使两个线程按一定顺序执行？" class="headerlink" title="如何使两个线程按一定顺序执行？"></a>如何使两个线程按一定顺序执行？</h2><p>假设有两个线程：线程A和线程B。这两个线程都可以连续打印三个数字(1-3)，我们看下面的代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">demo1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Thread A = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            printNumber(<span class="string">"A"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    Thread B = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            printNumber(<span class="string">"B"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    A.start();</span><br><span class="line">    B.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+            <p>
+              尽管大多数情况下，每个子线程都只需要完成他们自己的任务，但是有时候我们可能希望多个线程共同协作来执行一个任务，这就涉及到了线程间的通信。
+本文要讨论如下的方法和类：thread.join(), object.wait(), object.notify(), CountdownLatch, Cyclicbarrier, FutureTask, Callbale等。
+我会用几个例子来解释如何在Java中实现线程间通信。
 
-<p>printNumber(String)的实现如下，用于连续的打印1，2和3：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">private static void printNumber(String threadName) &#123;</span><br><span class="line">    int i=0;</span><br><span class="line">    while (i++ &lt; 3) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            Thread.sleep(100);</span><br><span class="line">        &#125; catch (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(threadName + "print:" + i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>我们会得到以下结果：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">B print: <span class="number">1</span></span><br><span class="line">A print: <span class="number">1</span></span><br><span class="line">B print: <span class="number">2</span></span><br><span class="line">A print: <span class="number">2</span></span><br><span class="line">B print: <span class="number">3</span></span><br><span class="line">A print: <span class="number">3</span></span><br></pre></td></tr></table></figure>
-
-<p>你可以看到A和B同时打印了数字。</p>
-<p>如果我们希望B在A打印完成后开始打印该怎么做？我们可以使用thread.join方法，代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">demo2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Thread A = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            printNumber(<span class="string">"A"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    Thread B = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"B starts waiting for A"</span>);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                A.join();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            printNumber(<span class="string">"B"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    B.start();</span><br><span class="line">    A.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>现在我们得到如下结果：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">B starts waiting <span class="keyword">for</span> A</span><br><span class="line">A print: <span class="number">1</span></span><br><span class="line">A print: <span class="number">2</span></span><br><span class="line">A print: <span class="number">3</span></span><br><span class="line"> </span><br><span class="line">B print: <span class="number">1</span></span><br><span class="line">B print: <span class="number">2</span></span><br><span class="line">B print: <span class="number">3</span></span><br></pre></td></tr></table></figure>
-
-<p>现在我们知道了，A.join()方法可以使B等待A完成打印后执行。</p>
-<h2 id="如何使两个线程按特定的方式有序相交？"><a href="#如何使两个线程按特定的方式有序相交？" class="headerlink" title="如何使两个线程按特定的方式有序相交？"></a>如何使两个线程按特定的方式有序相交？</h2><p>如果我们现在希望B只在A完成了打印1后，开始打印1，2，3，接着A继续打印2，3该如何做呢？显然我们需要粒度更细的锁来控制执行的顺序。</p>
-<p>现在，我们可以利用object.wait()和object.notify()方法，代码如下：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * A 1, B 1, B 2, B 3, A 2, A 3</span><br><span class="line"> */</span><br><span class="line">private static void demo3() &#123;</span><br><span class="line">    Object lock = new Object();</span><br><span class="line">    Thread A = new Thread(new Runnable() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            synchronized (lock) &#123;</span><br><span class="line">                System.out.println("A 1");</span><br><span class="line">                try &#123;</span><br><span class="line">                    lock.wait();</span><br><span class="line">                &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                System.out.println("A 2");</span><br><span class="line">                System.out.println("A 3");</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    Thread B = new Thread(new Runnable() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            synchronized (lock) &#123;</span><br><span class="line">                System.out.println("B 1");</span><br><span class="line">                System.out.println("B 2");</span><br><span class="line">                System.out.println("B 3");</span><br><span class="line">                lock.notify();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    A.start();</span><br><span class="line">    B.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>结果如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">A <span class="number">1</span></span><br><span class="line">A waiting…</span><br><span class="line"> </span><br><span class="line">B <span class="number">1</span></span><br><span class="line">B <span class="number">2</span></span><br><span class="line">B <span class="number">3</span></span><br><span class="line">A <span class="number">2</span></span><br><span class="line">A <span class="number">3</span></span><br></pre></td></tr></table></figure>
-
-<p>这就是我们想要的。</p>
-<blockquote>
-<p>发生了什么？</p>
-<ol>
-<li>首先我们创建了一个A和B共享的对象锁：lock = new Object();</li>
-<li>当A拿到锁的时候，它首先打印了一个1，然后她调用了lock.wait()方法使它变成了等待状态，然后交出了锁的控制权？</li>
-<li>直到A调用了lock.wait()方法释放了控制权并且B得到了锁，B才会执行。</li>
-<li>B得到锁后打印了1，2，3，然后调用了lock.notify()方法来唤醒正在等待的A。</li>
-<li>A醒来后继续打印了剩下的2，3。</li>
-</ol>
-</blockquote>
-<p>在下面的代码中我增加了日志，以便与理解。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">demo3</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Object lock = <span class="keyword">new</span> Object();</span><br><span class="line">    Thread A = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"INFO: A is waiting for the lock"</span>);</span><br><span class="line">            <span class="keyword">synchronized</span> (lock) &#123;</span><br><span class="line">                System.out.println(<span class="string">"INFO: A got the lock"</span>);</span><br><span class="line">                System.out.println(<span class="string">"A 1"</span>);</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    System.out.println(<span class="string">"INFO: A is ready to enter the wait state, giving up control of the lock"</span>);</span><br><span class="line">                    lock.wait();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                System.out.println(<span class="string">"INFO: B wakes up A, and A regains the lock"</span>);</span><br><span class="line">                System.out.println(<span class="string">"A 2"</span>);</span><br><span class="line">                System.out.println(<span class="string">"A 3"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    Thread B = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"INFO: B is waiting for the lock"</span>);</span><br><span class="line">            <span class="keyword">synchronized</span> (lock) &#123;</span><br><span class="line">                System.out.println(<span class="string">"INFO: B got the lock"</span>);</span><br><span class="line">                System.out.println(<span class="string">"B 1"</span>);</span><br><span class="line">                System.out.println(<span class="string">"B 2"</span>);</span><br><span class="line">                System.out.println(<span class="string">"B 3"</span>);</span><br><span class="line">                System.out.println(<span class="string">"INFO: B ends printing, and calling the notify method"</span>);</span><br><span class="line">                lock.notify();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    A.start();</span><br><span class="line">    B.start();</span><br></pre></td></tr></table></figure>
-
-<p>执行结果如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">INFO: A is waiting <span class="keyword">for</span> the lock</span><br><span class="line">INFO: A got the lock</span><br><span class="line">A <span class="number">1</span></span><br><span class="line">INFO: A is ready to enter the wait state, giving up control of the lock</span><br><span class="line">INFO: B is waiting <span class="keyword">for</span> the lock</span><br><span class="line">INFO: B got the lock</span><br><span class="line">B <span class="number">1</span></span><br><span class="line">B <span class="number">2</span></span><br><span class="line">B <span class="number">3</span></span><br><span class="line">INFO: B ends printing, and calling the notify method</span><br><span class="line">INFO: B wakes up A, and A regains the lock</span><br><span class="line">A <span class="number">2</span></span><br><span class="line">A <span class="number">3</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="D在A-B-C全部同步地执行完后执行"><a href="#D在A-B-C全部同步地执行完后执行" class="headerlink" title="D在A,B,C全部同步地执行完后执行"></a>D在A,B,C全部同步地执行完后执行</h2><p>前面介绍了thread.join()方法允许一个线程在等待另外一个线程完成后继续执行。但是如果我们在D中有序的加入A,B,C，这将使它们按顺序执行，而我们希望三个线程同步地执行。</p>
-<p>我们想要实现的目标是：三个线程A,B,C可以在同一时间开始运行，每个线程都会在完成后单独通知D；D直到A,B和C全部执行完后才会执行。所以我们使用CountdownLatch来实现这种类型的通信。</p>
-<p>它的基本用法是：</p>
-<ol>
-<li>创建一个计数器，然后设置一个初始值，CountdownLatch countDownLatch = new CountDownLatch(3);</li>
-<li>在等待线程中调用countDownLatch.await()方法进入等待状态，直到计数值变成0；</li>
-<li>在其他线程中调用countDownLatch.countDown()方法，这个方法使计数值减少1；</li>
-<li>当其他线程中的countDown()方法将计数值设置成0时，等待线程中的countDownLatch.await()方法会立刻退出并执行后面的代码。</li>
-</ol>
-<p>实现代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">runDAfterABC</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> worker = <span class="number">3</span>;</span><br><span class="line">    CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(worker);</span><br><span class="line">    <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"D is waiting for other three threads"</span>);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                countDownLatch.await();</span><br><span class="line">                System.out.println(<span class="string">"All done, D starts working"</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;).start();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">char</span> threadName=<span class="string">'A'</span>; threadName &lt;= <span class="string">'C'</span>; threadName++) &#123;</span><br><span class="line">        <span class="keyword">final</span> String tN = String.valueOf(threadName);</span><br><span class="line">        <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                System.out.println(tN + <span class="string">"is working"</span>);</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Thread.sleep(<span class="number">100</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                System.out.println(tN + <span class="string">"finished"</span>);</span><br><span class="line">                countDownLatch.countDown();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>执行结果如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">D is waiting <span class="keyword">for</span> other three threads</span><br><span class="line">A is working</span><br><span class="line">B is working</span><br><span class="line">C is working</span><br><span class="line"> </span><br><span class="line">A finished</span><br><span class="line">C finished</span><br><span class="line">B finished</span><br><span class="line">All done, D starts working</span><br></pre></td></tr></table></figure>
-
-<p>事实上，CountDownLatch本身是一个倒数计数器，并且我们设置初始值是3。当D开始运行时，它首先调用countDownLatch.await()方法来检查计数值是否是0，如果计数值不是0，则他会保持等待状态。A,B和C每个都会在他们完成运行后单独地使用countDownLatch.countDown()方法来使计数值减去1。这样当他们三个全部运行完时，计数值就会被减少到0；然后，D的await()方法将会被触发来结束A,B和C，D会开始执行。</p>
-<p>所以，在一个线程需要等待其他多个线程的情况下，使用CountDownLatch是个合适的解决方案。</p>
-<h2 id="三个运动员准备跑步"><a href="#三个运动员准备跑步" class="headerlink" title="三个运动员准备跑步"></a>三个运动员准备跑步</h2><p>三个运动员各自进行准备，然后当他们全部准备好后，同时开始跑步。</p>
-<p>这次A,B和C三个线程中的每个都需要分别进行准备，然后当他们全部准备好后，同时地开始跑步。我们该如何实现这个需求呢？</p>
-<p>我们上面介绍的CountDownLatch可以被用来倒计时，但是当倒计时完成，只有一个线程的await()方法会得到响应，所以多个线程无法在同一时间被触发。</p>
-<p>为了实现线程之间相互等待的效果，我们可以使用CyclicBarrier数据结构，它的基本用法如下：</p>
-<ol>
-<li>首先创建一个公有对象CyclicBarrier，并且设置线程需要同时等待的数量，CyclicBarrier cyclicBarrier = new CyclicBarrier(3);</li>
-<li>三个线程同步地开始准备，在他们准备完成后，他们需要等待其他线程完成准备，所以调用cyclicBarrier.await()方法来等待其他线程。</li>
-<li>当这些特定的需要同时等待的线程全部调用cyclicBarrier.await()方法，这意味着这些线程准备好了，然后这些线程会同时开始继续执行。</li>
-</ol>
-<p>实现代码如下，想象这三个线程是三个需要同时开始跑步的运动员，所以他们需要等待其他运动员直到全部人都完成准备。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">runABCWhenAllReady</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> runner = <span class="number">3</span>;</span><br><span class="line">    CyclicBarrier cyclicBarrier = <span class="keyword">new</span> CyclicBarrier(runner);</span><br><span class="line">    <span class="keyword">final</span> Random random = <span class="keyword">new</span> Random();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">char</span> runnerName=<span class="string">'A'</span>; runnerName &lt;= <span class="string">'C'</span>; runnerName++) &#123;</span><br><span class="line">        <span class="keyword">final</span> String rN = String.valueOf(runnerName);</span><br><span class="line">        <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                <span class="keyword">long</span> prepareTime = random.nextInt(<span class="number">10000</span>) + <span class="number">100</span>;</span><br><span class="line">                System.out.println(rN + <span class="string">"is preparing for time:"</span> + prepareTime);</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Thread.sleep(prepareTime);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    System.out.println(rN + <span class="string">"is prepared, waiting for others"</span>);</span><br><span class="line">                    cyclicBarrier.await(); <span class="comment">// The current runner is ready, waiting for others to be ready</span></span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (BrokenBarrierException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                System.out.println(rN + <span class="string">"starts running"</span>); <span class="comment">// All the runners are ready to start running together</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>结果如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">A is preparing <span class="keyword">for</span> time: <span class="number">4131</span></span><br><span class="line">B is preparing <span class="keyword">for</span> time: <span class="number">6349</span></span><br><span class="line">C is preparing <span class="keyword">for</span> time: <span class="number">8206</span></span><br><span class="line"> </span><br><span class="line">A is prepared, waiting <span class="keyword">for</span> others</span><br><span class="line"> </span><br><span class="line">B is prepared, waiting <span class="keyword">for</span> others</span><br><span class="line"> </span><br><span class="line">C is prepared, waiting <span class="keyword">for</span> others</span><br><span class="line"> </span><br><span class="line">C starts running</span><br><span class="line">A starts running</span><br><span class="line">B starts running</span><br></pre></td></tr></table></figure>
-
-<h2 id="子线程返回结果给主线程"><a href="#子线程返回结果给主线程" class="headerlink" title="子线程返回结果给主线程"></a>子线程返回结果给主线程</h2><p>在实际的开发中，我们经常需要创建一个子线程来做一些非常耗费时间的任务，然后将执行的结果返回给主线程。在Java中我们要怎么实现呢？</p>
-<p>所以一般情况下，当我们创建一个线程时，我们将Runnable对象传递给线程来执行。Runnale的定义如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>我们可以看到run()方法在执行后并没有任何返回值。当你想返回结果时该怎么做呢？这里你可以使用另一个相似的实现类Callable：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Callable</span>&lt;<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Computes a result, or throws an exception if unable to do so.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> computed result</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception if unable to compute a result</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">V <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>可以看出Callable最大的不同就是它返回了泛型。</p>
-<p>所以下一个问题就是，如何将子线程的结果返回？Java有一个类FutureTask，这个类可以使用Callable，但是注意这里用来获取结果的get方法会阻塞主线程。</p>
-<p>举个🌰，我们想要子线程计算1到100的和并且返回结果给主线程。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">doTaskWithResultInWorker</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Callable&lt;Integer&gt; callable = <span class="keyword">new</span> Callable&lt;Integer&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Integer <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"Task starts"</span>);</span><br><span class="line">            Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">            <span class="keyword">int</span> result = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;=<span class="number">100</span>; i++) &#123;</span><br><span class="line">                result += i;</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">"Task finished and return result"</span>);</span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    FutureTask&lt;Integer&gt; futureTask = <span class="keyword">new</span> FutureTask&lt;&gt;(callable);</span><br><span class="line">    <span class="keyword">new</span> Thread(futureTask).start();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">"Before futureTask.get()"</span>);</span><br><span class="line">        System.out.println(<span class="string">"Result:"</span> + futureTask.get());</span><br><span class="line">        System.out.println(<span class="string">"After futureTask.get()"</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (ExecutionException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>结果如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Before futureTask.get()</span><br><span class="line"> </span><br><span class="line">Task starts</span><br><span class="line">Task finished and <span class="keyword">return</span> result</span><br><span class="line"> </span><br><span class="line">Result: <span class="number">5050</span></span><br><span class="line">After futureTask.get()</span><br></pre></td></tr></table></figure>
-
-<p>可以看出，当主线程调用futureTask.get()方法时是阻塞状态；然后Callable开始在内部执行并返回结果；然后futureTask.get()获取到结果，主线程恢复运行。</p>
-<p>在这里我们了解到FutureTask和Callable可以直接在主线程中获得子线程的结果，但是它们会阻塞主线程。 当然，如果你不想阻止主线程，可以考虑使用ExecutorService将FutureTask放入线程池来管理执行。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>多线程在当今编程语言中是一种常见特性，线程间通信，线程同步和线程安全都是非常重要的课题。</p>
-
+如何使两个线程按一定顺序执行？
+如何使两个线程按特定的方式有序相交？
+现在有个四个线程：A, B, C和D(直到A, B, C被执行完了，D才会执行，并且A, B, C是同步执
+              ...
+            </p>
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/06/15/【译】Java中的线程间通信/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
@@ -584,81 +502,22 @@
 
       
           
-            <p><em>一步步探索并发的世界。</em></p>
-<p>现代计算机有在同一时间处理多项任务的能力。得益于硬件的发展和更加智能的操作系统的支持，无论是处理速度还是响应速度，多线程的特性使得你的程序运行的更快。</p>
-<p>创作利用这种能力的软件是件非常迷人的事情，但是困难在于：这需要你理解在你的计算机内部到底发生了什么。首先我先浅显的介绍下线程，一个由操作系统提供的用于施展多线程魔术的工具。就让装逼开始吧。</p>
-<h2 id="进程和线程：用正确的方式命名"><a href="#进程和线程：用正确的方式命名" class="headerlink" title="进程和线程：用正确的方式命名"></a>进程和线程：用正确的方式命名</h2><p>现代操作系统可以同时运行多个程序。这就是为啥你可以在浏览器中阅读这篇文章(一个程序)，同时用你的media player听音乐(另一个程序)。每一个程序都被认为是一个正在被执行的进程。操作系统了解很多软件技巧，并且利用底层硬件，来使进程与其他进程区分开，单独的运行。不管是用什么方法，最终的结果就是你的感受是所有的程序在同时运行。</p>
-<p>通过运行进程来实现同时处理多个操作并不是唯一的方法。每个进程都可以在内部同时运行子任务，叫做<strong>线程</strong>。你可以将线程理解成进程本身的一个切片。每个进程在启动时都会触发一个线程，这被称为<strong>主线程(main thread)</strong>。同时，根据进程或者开发者的需要，其他线程可能被启动或者被终止。<strong>同步多线程</strong>就是在一个进程中运行多个线程。</p>
-<p>举个🌰，很可能你的media player运行了多个线程：一个用于初始化接口，这通常是主线程，另一个线程用于播放音乐等等。</p>
-<p>你可以将操作系统想象成一个包含多个进程的容器，每个进程包含多个线程。本文中我们只关注线程，但是整个话题引人入胜，值得在以后进行更深入的讨论。</p>
-<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-05-08-073028.png" alt="*1. Operating systems can be seen as a box that contains processes, which in turn contain one or more threads.*"></p>
-<h3 id="进程和线程的区别"><a href="#进程和线程的区别" class="headerlink" title="进程和线程的区别"></a>进程和线程的区别</h3><p>每个进程都有操作系统分配给它自己的内存块。默认情况下这些内存不会与其他进程共享：你的游览器没有操作media player和vice versa的内存的权限。如果你同时运行一个进程的两个实例，比如说启动了你的浏览器两次，则会发生一样的事情。操作系统会把每个实例当做一个新的进程处理，分配给它独立的内存。所以，默认情况下，两个以上的进程间没有办法共享数据，除非他们使用了更高级的用法：这就是传说中的<a href="https://en.wikipedia.org/wiki/Inter-process_communication" target="_blank" rel="noopener">进程间通信(IPC)</a>。</p>
-<p>和进程不同，线程间共享一个操作系统分配给它们父进程的的内存块：在media player主接口中的数据可以很轻松的被audio engine和vice versa访问。所以比两个进程间通信要更简单。除此之外，线程一般比进程要更轻量：它们占用更少的资源并且可以更快地创建，这就是为什么它们也被称为<strong>轻量进程(lightweight processes)</strong>。</p>
-<p>线程是一个使你的程序可以同时执行多个操作的便捷实现方式。如果不用线程的话你可能必须给每个任务写一个程序，把它们当做进程来运行并且通过操作系统同步它们。这可能会更困难(IPC非常棘手)并且更慢(进程比线程更重)。</p>
-<h3 id="绿色线程，纤程"><a href="#绿色线程，纤程" class="headerlink" title="绿色线程，纤程"></a>绿色线程，纤程</h3><p>目前我们提到的线程都是操作系统中的：一个进程想要开启一个新线程必须通过操作系统。不是所有的平台都天然的支持线程。不过，<strong>绿色线程(Green threads)</strong>，也被称为<strong>纤程(fibers)</strong>，这是在不提供多线程能力的环境中可使多线程程序工作的一种仿真。举个🌰，假设底层操作系统不支持本地线程，那么虚拟机可能实现了一个绿色线程。</p>
-<p>绿色线程创建和处理的的更快，因为他们完全绕过了操作系统，但是这也有坏处，我将在以后的文章中介绍这一部分。</p>
-<p>“绿色线程”的名称来源于Sun Microsystem的Green Team，他们在90年代设计了最早的Java线程库。今天Java已经不再使用绿色线程：他们在2000年改用本地语言了。其他一些编程语言，比如Go，Haskell或者Rust等，他们实现了类似于绿色线程的特性替代了本地线程。</p>
-<h2 id="线程用来做什么"><a href="#线程用来做什么" class="headerlink" title="线程用来做什么"></a>线程用来做什么</h2><p>为什么一个进程应该使用多个线程？正如我之前说的，并行的处理事务可以大大的提高速度。如果你要用你的视频编辑器处理一个视频。编辑器有可能足够聪明将渲染操作分散到多个线程，每个线程处理一个最终视频的分块。如果用一个线程来处理这个任务可能花费一个小时，用两个线程可能花费30分钟，用四个线程会花费15分钟，以此类推。</p>
-<p>真的这么简单吗？有三个重要的点值得深思：</p>
-<ol>
-<li>不是所有的程序都需要多线程。如果你的应用执行一个有序操作或者经常等待用户去做一些操作，那么多线程可能就没那么适用了。</li>
-<li>你仅仅只是不像一个应用抛出更多线程来使它运行的更快：每个子任务都必须经过思考和仔细的设计来执行并行操作。</li>
-<li>并不是100%的保证线程可以真正的并行执行他们的操作，同时：这实际上是由底层硬件决定的。</li>
-</ol>
-<p>最后一点十分重要：如果你的计算机不支持同一时间进行多操作，操作系统不得不伪造他们。我们在一分钟内将会看到。现在我们将<strong>并发</strong>想象成一种任务在同一时间运行的主观感受，而真正的任务并行是确确实实的在同一时间运行。</p>
-<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-05-08-123859.png" alt="*2. Parallelism is a subset of concurrency.*"></p>
-<h2 id="是什么使并发和并行可行"><a href="#是什么使并发和并行可行" class="headerlink" title="是什么使并发和并行可行"></a>是什么使并发和并行可行</h2><p>你的计算机中的中央处理器(CPU)努力地执行了运行程序的工作。它由几个部分组成，其中很重要的一个就是所谓的<strong>核心</strong>：这是真正执行计算的地方。一个核心只有同时处理一个操作的能力。</p>
-<p>这当然是个重要的缺陷。正因为如此，操作系统拥有成熟的高级方法来给用户同时运行多个进程的能力，尤其是在图像化环境下，即使在单核心的机器上。最重要的一个方法是抢占式多任务处理，抢占是一种中断一个任务，切换到另一个任务，并在后续唤醒第一个任务的能力。</p>
-<p>所以如果你的CPU只有一个核心，操作系统的一部分工作就是将单个的核心的计算能力分配给多个进程或者线程，在一个循环中一个一个按顺序执行。这个操作给了你一种同时执行了不止一个程序的错觉，或者是感觉上一个进程同时做了多件事(如果是多线程)。虽然这实现了并发性，但是真正的平行—同步的运行多个进程的能力—依旧是缺失的。</p>
-<p>现代的CPU们内部都有了不止一个核心，每个核心同一时间执行一个独立的操作。这意味着两个以上的核心实现真正的并行是可行的。举个🌰，我的Intel Core i7处理器拥有四个核心：同时地，他可以同一时间运行四个不同的进程或者线程。</p>
-<p>操作系统可以识别到CPU核心的数量然后给它们每个分配进程或者线程。一个线程可能被操作系统分配到任意一个核心，这种调度对于正在运行的程序来说是完全透明的。另外，为了防止所有的核心都在工作采用了抢占式多任务处理。这给了你可以运行比计算机真正核心数量或者核心可以承担的数量更多的线程数的能力。</p>
-<h3 id="多线程应用运行在单核环境下：这真的合理吗？"><a href="#多线程应用运行在单核环境下：这真的合理吗？" class="headerlink" title="多线程应用运行在单核环境下：这真的合理吗？"></a>多线程应用运行在单核环境下：这真的合理吗？</h3><p>真正的并行在单核机器上是不可能实现的。然而，如果你的应用可以从中受益，那么将其做成多线程程序依旧是合理的。当一个进程拥有多个线程，即使在其中一个线程运行很慢或者阻塞的时候，抢占式多任务处理可以保持应用正常运行。</p>
-<p>举个🌰，你正在使用一个桌面应用工作，这个应用在从一个运行速度奇慢的硬盘上读取数据。如果你整个程序只有一个线程，那么整个应用都会停止响应知道硬盘操作结束：当仅有的一个线程在等待硬盘被唤醒的时候，CPU的算力就被浪费了。当然除了这个进程，操作系统还在运行其他的进程，但是你这个应用并不会有任何进展。</p>
-<p>我们用多线程的方式重新设计下你的应用。线程A负责访问硬盘，同时线程B负责主接口。如果线程A因为设备速度慢卡住了，线程B已经可以运行主接口，保证你的应用是可响应的。这是可行的，因为如果有两个线程，操作系统可以交替的给它们CPU资源，而不至于因为其中一个线程速度慢卡住。</p>
-<h2 id="线程越多，问题越多"><a href="#线程越多，问题越多" class="headerlink" title="线程越多，问题越多"></a>线程越多，问题越多</h2><p>据我们所知，线程间分享它们的父进程的同一内存块。这使得一个应用中两个或者更多的线程间交互数据变成非常简单。举个🌰：一个movie editor可能会占有共享内存的很大一部分包含视频的时间轴。这样的内存会被几个用于将视频渲染到文件的工作线程读取，他们都需要内存区域的一个句柄(比如指针)，用于从硬盘读取和渲染到硬盘。</p>
-<p>如果两个以上的线程从同一个内存位置读取，那么就不会有啥问题。如果至少一个线程正在写入共享内存，而其他线程正在从共享内存读取数据，那问题就出现了。这时候可能会出现两个问题：</p>
-<ul>
-<li><strong>数据冲突</strong>——当一个写操作线程正在修改一个内存，一个读操作线程可能正在从中读取。如果写操作线程还未完成这个修改，那读操作线程就会读取到损坏的数据；</li>
-<li><strong>紊乱情况</strong>——一个读操作线程被认为只在写操作完成后才做读取。那如果相反的情况发生呢？一个比数据冲突更微妙的情况，紊乱情况是指，两个或两个以上的线程以不可预测的顺序执行了工作，它们的工作本来应该按照某种顺序执行以正确的完成。即使在有保护的情况下，你的程序也可能触发紊乱情况。</li>
-</ul>
-<h3 id="线程安全概念"><a href="#线程安全概念" class="headerlink" title="线程安全概念"></a>线程安全概念</h3><p>如果一个代码片段工作正常，即使很多线程同步地执行，也不会出现数据冲突和紊乱情况，那么它就是线程安全的。你可能注意到一些开发库宣传他们自己是线程安全的：如果你正在编写一个多线程程序，你需要保证其他第三方方法可以在不同线程间使用而不会触发并发问题。</p>
-<h2 id="数据冲突的根本原因"><a href="#数据冲突的根本原因" class="headerlink" title="数据冲突的根本原因"></a>数据冲突的根本原因</h2><p>我们知道一个CPU在同一时间只能执行一个机器指令。这些指令被称为是原子性的，因为它们不可分割：就是说不能再分割成更小的操作了。希腊单词”atom”意思就是不可切分。</p>
-<p>不可分割的特性使得原子操作天生就是线程安全的。当一个线程对一个共享数据执行一个原子写操作，那么其他线程无法读取这个正在被修改的线程。相反地，当一个线程对共享数据执行一个原子读操作，它会读取在单一时间的完整数据。现在并没有方法可使线程绕过原子操作，因此就不会有数据冲突出现了。</p>
-<p>坏消息是有大量的操作是非原子性的。即使像<code>x = 1</code>这样微不足道的操作，在有些硬件中，也由多个原子组成，这使得整个任务本身是非原子性的。所以当一个线程读取<code>x</code>时，另一个线程执行<code>x = 1</code>时，就会触发数据冲突。</p>
-<h2 id="紊乱情况的根本原因"><a href="#紊乱情况的根本原因" class="headerlink" title="紊乱情况的根本原因"></a>紊乱情况的根本原因</h2><p>抢占式多线程管理给了操作系统管理线程的全部权限：它可以根据先进的调度算法开启，终止和暂停线程。作为开发人员，你无法控制执行的时间和命令。事实上，以下这样简单的命令并没有什么保障：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">writer_thread.start()</span><br><span class="line">reader_thread.start()</span><br></pre></td></tr></table></figure>
-
-<p>以特定的顺序开启这两个线程。运行这个程序几次后，你就会发现他的行为每次运行都不一样：有时候写线程先执行，有时候读线程先执行。如果你需要写线程总是在读线程运行前执行，你需要解决这种紊乱情况。</p>
-<p>这种行为被称为不确定性：每次输出都不同，并且你无法预测结果。调试一个会被紊乱情况影响的程序是非常烦人的，因为你无法可控地复现问题。</p>
-<h2 id="告诉线程如何相处：并发控制"><a href="#告诉线程如何相处：并发控制" class="headerlink" title="告诉线程如何相处：并发控制"></a>告诉线程如何相处：并发控制</h2><p>数据冲突和紊乱情况都是现实世界中真实存在的：有的人甚至因为这些原因失去生命。容纳两个或以上线程的艺术被称为<strong>并发控制</strong>：操作系统和编程语言提供了几种解决方案来处理这些问题。几个最主要的包括：</p>
-<ul>
-<li><strong>同步</strong> —— 一种方法保证资源在同一时间只被一个线程使用。同步就是使你代码中的一部分是”protected”状态这样两个或更多的并发线程不能同时执行它，进而破坏了你共享数据；</li>
-<li><strong>原子操作</strong> —— 多亏了操作系统提供的特殊指令，一群非原子操作(就像之前提到的例子)可以被转化成一个原子操作。这种方法使共享数据保持在一个可用状态，不管其他线程如何去使用这些共享数据。</li>
-<li><strong>不可变数据</strong> —— 共享数据被设置成不可变，什么都无法改变它：线程只被允许从中读取数据，解决了问题的根本原因。据我们所知，只要不被修改，线程可以安全地从一个内存地址中读取数据。这是函数式编程的基本原理。</li>
-</ul>
-<p>我将在这个关于并发的迷你系列的下一集中介绍所有这些引人入胜的主题。 敬请关注！</p>
-<h2 id="参考内容"><a href="#参考内容" class="headerlink" title="参考内容"></a>参考内容</h2><p>8 bit avenue - <a href="https://www.8bitavenue.com/difference-between-multiprogramming-multitasking-multithreading-and-multiprocessing/" target="_blank" rel="noopener">Difference between Multiprogramming, Multitasking, Multithreading and Multiprocessing</a></p>
-<p>Wikipedia - <a href="https://en.wikipedia.org/wiki/Inter-process_communication" target="_blank" rel="noopener">Inter-process communication</a></p>
-<p>Wikipedia - <a href="https://en.wikipedia.org/wiki/Process_(computing)" target="_blank" rel="noopener">Process (computing)</a></p>
-<p>Wikipedia - <a href="https://en.wikipedia.org/wiki/Concurrency_(computer_science)" target="_blank" rel="noopener">Concurrency (computer science)</a></p>
-<p>Wikipedia - <a href="https://en.wikipedia.org/wiki/Parallel_computing" target="_blank" rel="noopener">Parallel computing</a></p>
-<p>Wikipedia - <a href="https://en.wikipedia.org/wiki/Multithreading_(computer_architecture)" target="_blank" rel="noopener">Multithreading (computer architecture)</a></p>
-<p>Stackoverflow - <a href="https://stackoverflow.com/questions/1713554/threads-processes-vs-multithreading-multicore-multiprocessor-how-they-are" target="_blank" rel="noopener">Threads &amp; Processes Vs MultiThreading &amp; Multi-Core/MultiProcessor: How they are mapped?</a></p>
-<p>Stackoverflow - <a href="https://stackoverflow.com/questions/19225859/difference-between-core-and-processor" target="_blank" rel="noopener">Difference between core and processor?</a></p>
-<p>Wikipedia - <a href="https://en.wikipedia.org/wiki/Thread_(computing)" target="_blank" rel="noopener">Thread (computing)</a></p>
-<p>Wikipedia - <a href="https://en.wikipedia.org/wiki/Computer_multitasking" target="_blank" rel="noopener">Computer multitasking</a></p>
-<p>Ibm.com - <a href="https://www.ibm.com/support/knowledgecenter/en/ssw_aix_71/com.ibm.aix.genprogc/benefits_threads.htm" target="_blank" rel="noopener">Benefits of threads</a></p>
-<p>Haskell.org - <a href="https://wiki.haskell.org/Parallelism_vs._Concurrency" target="_blank" rel="noopener">Parallelism vs. Concurrency</a></p>
-<p>Stackoverflow - <a href="https://stackoverflow.com/questions/16116952/can-multithreading-be-implemented-on-a-single-processor-system" target="_blank" rel="noopener">Can multithreading be implemented on a single processor system?</a></p>
-<p>HowToGeek - <a href="https://www.howtogeek.com/194756/cpu-basics-multiple-cpus-cores-and-hyper-threading-explained/" target="_blank" rel="noopener">CPU Basics: Multiple CPUs, Cores, and Hyper-Threading Explained</a></p>
-<p>Oracle.com - <a href="https://docs.oracle.com/cd/E19205-01/820-0619/geojs/index.html" target="_blank" rel="noopener">1.2 What is a Data Race?</a></p>
-<p>Jaka’s corner - <a href="http://jakascorner.com/blog/2016/01/data-races.html" target="_blank" rel="noopener">Data race and mutex</a></p>
-<p>Wikipedia - <a href="https://en.wikipedia.org/wiki/Thread_safety" target="_blank" rel="noopener">Thread safety</a></p>
-<p>Preshing on Programming - <a href="https://preshing.com/20130618/atomic-vs-non-atomic-operations/" target="_blank" rel="noopener">Atomic vs. Non-Atomic Operations</a></p>
-<p>Wikipedia - <a href="https://en.wikipedia.org/wiki/Green_threads" target="_blank" rel="noopener">Green threads</a></p>
-<p>Stackoverflow - <a href="https://stackoverflow.com/questions/617787/why-should-i-use-a-thread-vs-using-a-process" target="_blank" rel="noopener">Why should I use a thread vs. using a process?</a></p>
-
+            <p>
+              一步步探索并发的世界。
+现代计算机有在同一时间处理多项任务的能力。得益于硬件的发展和更加智能的操作系统的支持，无论是处理速度还是响应速度，多线程的特性使得你的程序运行的更快。
+创作利用这种能力的软件是件非常迷人的事情，但是困难在于：这需要你理解在你的计算机内部到底发生了什么。首先我先浅显的介绍下线程，一个由操作系统提供的用于施展多线程魔术的工具。就让装逼开始吧。
+进程和线程：用正确的方式命名现代操作系统可以同时运行多个程序。这就是为啥你可以在浏览器中阅读这篇文章(一个程序)，同时用你的media player听音乐(另一个程序)。每一个程序都被认为是一个正在被执行的进程。操作系统了解很多软件技
+              ...
+            </p>
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/05/13/【译】多线程简介/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
@@ -754,74 +613,23 @@
 
       
           
-            <p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-26-075600.jpg" alt="person using MacBook pro"></p>
-<p>自从2013年5月29日正式发布以来，React.js已经占领了互联网。我和很多开发者的成功都要归功于这个神奇的框架，这已经不是啥秘密了。</p>
-<p>Medium上有很多React.js的教程，在我开始使用React.js时，我希望这些教程中有一个可以告诉我以下这些小技巧。</p>
-<h3 id="使用arrow-function时不需要使用-bind-this"><a href="#使用arrow-function时不需要使用-bind-this" class="headerlink" title="使用arrow function时不需要使用.bind(this)"></a>使用arrow function时不需要使用.bind(this)</h3><p>一般的，当你有一个受控的组件时，你会像以下示例这样做：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">class Foo extends React.Component&#123;</span><br><span class="line">  constructor( props )&#123;</span><br><span class="line">    super( props );</span><br><span class="line">    this.handleClick = this.handleClick.bind(this);</span><br><span class="line">  &#125;</span><br><span class="line">  handleClick(event)&#123;</span><br><span class="line">    // your event handling logic</span><br><span class="line">  &#125;</span><br><span class="line">  render()&#123;</span><br><span class="line">    return (</span><br><span class="line">      &lt;button type=&quot;button&quot; </span><br><span class="line">      onClick=&#123;this.handleClick&#125;&gt;</span><br><span class="line">      Click Me</span><br><span class="line">      &lt;/button&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>你在每个方法中都写上<code>.bind(this)</code>，因为绝大多数教程都告诉你要这样做。如果你有几个受控组件，你的<code>constructor(){}</code>方法会变得十分臃肿。</p>
-<p><strong>作为替代，你可以这样做：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Foo extends React.Component&#123;</span><br><span class="line">  handleClick = (event) =&gt; &#123;</span><br><span class="line">    // your event handling logic</span><br><span class="line">  &#125;</span><br><span class="line">  render()&#123;</span><br><span class="line">    return (</span><br><span class="line">      &lt;button type=&quot;button&quot; </span><br><span class="line">      onClick=&#123;this.handleClick&#125;&gt;</span><br><span class="line">        Click Me</span><br><span class="line">      &lt;/button&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>不错吧。</p>
-<p>ES6的arrow function使用Lexical Scoping，这允许方法在被触发时访问<code>this</code>。</p>
-<h3 id="当service-workers对你的开发产生阻碍时"><a href="#当service-workers对你的开发产生阻碍时" class="headerlink" title="当service workers对你的开发产生阻碍时"></a>当service workers对你的开发产生阻碍时</h3><p>Service workers非常适用于一个progressive web app，progressive web app允许离线访问，并且优化在较差网络环境下的用户的体验。</p>
-<p>但是当你还没有意识到service worker正在缓存你的静态文件，你会不停地部署你的热更新文件。</p>
-<p>不要慌，确保你的<code>src/index.js</code>：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// Make sure it&apos;s set to unregister</span><br><span class="line">serviceWorker.unregister();</span><br></pre></td></tr></table></figure>
-
-<p>在16.8版本下，这行应该默认是<code>serverWorker.unregister()</code>。</p>
-<p>但是如果后面版本他们决定再次改变，你要知道去哪里找到这个设置。</p>
-<h3 id="在99-的情况下，你不需要eject"><a href="#在99-的情况下，你不需要eject" class="headerlink" title="在99%的情况下，你不需要eject"></a>在99%的情况下，你不需要eject</h3><p>Create React App提供了一个选项<code>yarn eject</code>，用于定制你的项目的构建过程。</p>
-<p>我记得我尝试着自定义一个构建过程以实现在我们的代码中可以自动关联SVG图片。我花了数个小时的时间尝试着去理解构建过程。最后，我们得到了一个包含SVG标签的导入文件，然后我们加快了网站的加载速度0.0001毫秒。</p>
-<p>在你的React项目中使用eject就像为了提高1%的速度，将你正在运行的汽车的引擎盖打开并更换了引擎。</p>
-<p>当然了，如果你已经是一个使用Webpack的资深人士，为了适应特殊的项目需求使用自定义构建过程是值得的。</p>
-<p>当你尝试按时完成任务时，将你的精力集中在能推进进度的点上。</p>
-<h3 id="使用ESlint-Auto-Fix-On-Save将会节约大量的时间"><a href="#使用ESlint-Auto-Fix-On-Save将会节约大量的时间" class="headerlink" title="使用ESlint Auto Fix On Save将会节约大量的时间"></a>使用ESlint Auto Fix On Save将会节约大量的时间</h3><p>你可能从某些地方复制了一些代码，他们的格式给了你沉重的打击(一看就头疼)。因为你无法忍受他们看起来有多丑，你花费时间去手动的添加空格。</p>
-<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-29-030507.gif" alt></p>
-<p>使用Visual Studio Code的ESLint插件，可以在保存的时候修复格式。</p>
-<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-28-092815.gif" alt></p>
-<p>如何使用呢？</p>
-<ol>
-<li><p>在你的<code>package.json</code>文件中，添加一些开发环境依赖，然后执行<code>npm i</code>或者<code>yarn</code>:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">"devDependencies": &#123;</span><br><span class="line"> "eslint-config-airbnb": "^17.1.0",</span><br><span class="line"> "eslint-config-prettier": "^3.1.0",</span><br><span class="line"> "eslint-plugin-import": "^2.14.0",</span><br><span class="line"> "eslint-plugin-jsx-a11y": "^6.1.1",</span><br><span class="line"> "eslint-plugin-prettier": "^3.0.0",</span><br><span class="line"> "eslint-plugin-react": "^7.11.0"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>安装ESLint扩展</p>
-<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-28-093236.png" alt></p>
-</li>
-<li><p>开启Auto Fix On Save</p>
-<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-28-093300.png" alt></p>
-</li>
-</ol>
-<h3 id="你并不需要Redux-styled-components-等等…"><a href="#你并不需要Redux-styled-components-等等…" class="headerlink" title="你并不需要Redux,styled-components,等等…"></a>你并不需要Redux,styled-components,等等…</h3><p>每个工具都有它的目的，这就是说，了解不同的工具是有好处的。</p>
-<blockquote>
-<p><em>If all you have is a hammer, everything looks like a nail — Abraham Maslow</em></p>
-<p>如果你有一把锤子，那么一切都看起来像钉子— Abraham Maslow</p>
-</blockquote>
-<p>你需要考虑你在引入使用这些库所花费的时间，并比较下面几点：</p>
-<ul>
-<li>我在尝试解决什么问题？</li>
-<li>这个项目可以长久的从这个库中获得好处吗？</li>
-<li>React是不是提供了相同的，现成的方法？</li>
-</ul>
-<p>现在React提供了Context和Hooks，你还需要Redux吗？</p>
-<p>当你的用户在较差的网络环境下使用的时候，我墙裂的推荐Redux Offline。</p>
-<h3 id="重复事件处理器"><a href="#重复事件处理器" class="headerlink" title="重复事件处理器"></a>重复事件处理器</h3><p>如果你不想一遍又一遍的写相同的东西，重写一个事件处理器会是一个很好的选择：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">class App extends Component &#123;</span><br><span class="line"> constructor(props) &#123;</span><br><span class="line">  super(props);</span><br><span class="line">  this.state = &#123;</span><br><span class="line">   foo: &quot;&quot;,</span><br><span class="line">   bar: &quot;&quot;,</span><br><span class="line">  &#125;;</span><br><span class="line"> &#125;</span><br><span class="line"> // Reusable for all inputs</span><br><span class="line"> onChange = e =&gt; &#123;</span><br><span class="line">  const &#123;</span><br><span class="line">   target: &#123; value, name &#125;,</span><br><span class="line">  &#125; = e;</span><br><span class="line">  </span><br><span class="line">  // name will be the state name</span><br><span class="line">  this.setState(&#123;</span><br><span class="line">   [name]: value</span><br><span class="line">  &#125;);</span><br><span class="line"> &#125;;</span><br><span class="line"> </span><br><span class="line"> render() &#123;</span><br><span class="line">  return (</span><br><span class="line">   &lt;div&gt;</span><br><span class="line">    &lt;input name=&quot;foo&quot; onChange=&#123;this.onChange&#125; /&gt;</span><br><span class="line">    &lt;input name=&quot;bar&quot; onChange=&#123;this.onChange&#125; /&gt;   </span><br><span class="line">   &lt;/div&gt;</span><br><span class="line">  );</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="setState是异步的"><a href="#setState是异步的" class="headerlink" title="setState是异步的"></a>setState是异步的</h3><p>曾经愚蠢的我是这样写的：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">constructor(props) &#123;</span><br><span class="line"> super(props);</span><br><span class="line"> this.state = &#123;</span><br><span class="line">  isFiltered: false</span><br><span class="line"> &#125;;</span><br><span class="line">&#125;</span><br><span class="line">toggleFilter = () =&gt; &#123;</span><br><span class="line"> this.setState(&#123;</span><br><span class="line">  isFiltered: !this.state.isFiltered</span><br><span class="line"> &#125;);</span><br><span class="line"> this.filterData();</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">filterData = () =&gt; &#123;</span><br><span class="line"> // this.state.isFiltered should be true, but it&apos;s not</span><br><span class="line"> if (this.state.isFiltered) &#123;</span><br><span class="line">  // Do some filtering</span><br><span class="line"> &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<h4 id="优化方案一：将state传递下去"><a href="#优化方案一：将state传递下去" class="headerlink" title="优化方案一：将state传递下去"></a>优化方案一：将state传递下去</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">toggleFilter = () =&gt; &#123;</span><br><span class="line"> const currentFilterState = !this.state.isFiltered;</span><br><span class="line"> this.setState(&#123;</span><br><span class="line">  isFiltered: currentFilterState</span><br><span class="line"> &#125;);</span><br><span class="line"> this.filterData(currentFilterState);</span><br><span class="line">&#125;;</span><br><span class="line">filterData = (currentFilterState) =&gt; &#123;</span><br><span class="line"> if (currentFilterState) &#123;</span><br><span class="line">  // Do some filtering</span><br><span class="line"> &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<h4 id="优化方案二：在setState的二次回调函数中处理"><a href="#优化方案二：在setState的二次回调函数中处理" class="headerlink" title="优化方案二：在setState的二次回调函数中处理"></a>优化方案二：在setState的二次回调函数中处理</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">toggleFilter = () =&gt; &#123;</span><br><span class="line"> this.setState((prevState) =&gt; (&#123;</span><br><span class="line">  isFiltered: !prevState.isFiltered</span><br><span class="line"> &#125;), () =&gt; &#123;</span><br><span class="line">  this.filterData();</span><br><span class="line"> &#125;);</span><br><span class="line">&#125;;</span><br><span class="line">filterData = () =&gt; &#123;</span><br><span class="line">  if (this.state.isFiltered) &#123;</span><br><span class="line">   // Do some filtering</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>这些技巧帮我节省了大量的时间，我相信还有更多这样的秘诀，如果你有其他的，请在评论去与我们分享。</p>
-<p>如果你的网站正在尝试与微信平台结合，并期许获得中国10亿以上的用户，请登录 <a href="https://pages.convertkit.com/b2469604dd/0c671fdd2d" target="_blank" rel="noopener">free glossary for commonly used WeChat terms</a>。</p>
-<p>原文地址：<a href="https://medium.freecodecamp.org/what-i-wish-i-knew-when-i-started-to-work-with-react-js-3ba36107fd13" target="_blank" rel="noopener">https://medium.freecodecamp.org/what-i-wish-i-knew-when-i-started-to-work-with-react-js-3ba36107fd13</a></p>
-
+            <p>
+              
+自从2013年5月29日正式发布以来，React.js已经占领了互联网。我和很多开发者的成功都要归功于这个神奇的框架，这已经不是啥秘密了。
+Medium上有很多React.js的教程，在我开始使用React.js时，我希望这些教程中有一个可以告诉我以下这些小技巧。
+使用arrow function时不需要使用.bind(this)一般的，当你有一个受控的组件时，你会像以下示例这样做：
+class Foo extends React.Component&#123;  constructor( props )&#123;    super( props );    this.handleClic
+              ...
+            </p>
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/04/29/【译】当我开始使用React的时候，我希望自己知道这些技巧/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
@@ -925,94 +733,29 @@
 
       
           
-            <h2 id="如何阅读代码而不扯掉自己的头发"><a href="#如何阅读代码而不扯掉自己的头发" class="headerlink" title="如何阅读代码而不扯掉自己的头发"></a>如何阅读代码而不扯掉自己的头发</h2><ol>
-<li>写更多代码</li>
-<li>阅读更多代码</li>
-<li>每天重复以上</li>
-</ol>
-<p>这是我再转行做编程几乎两年后给自己的建议。幸运的是，现在网络上有大量的课程和辅导来教会我们如何编码。不幸的是，现在依旧几乎没有什么指导我们如何阅读代码的资源。<br>这是一个巨大的差距，目前越来越多的毕业生进入到技术领域，对阅读源码的强调从未如此重要。就像Brandon Bloom所说的：</p>
-<blockquote>
-<p>如果代码在你的机器上运行，那就是你的软件，你要为此负责，你必须理解它们。</p>
-</blockquote>
-<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-070654.gif" alt="Yes,you."></p>
-<p>虽然每一个程序员都应该阅读代码，但是他们并没有。很多程序员选择避免阅读代码的原因是因为阅读别人的代码很难，这让人沮丧，并且让他们觉得自己很蠢。我了解这种感受，因为我的感觉也是这样。</p>
-<p><strong>事情并不是一定要这样</strong></p>
-<p>当我阅读其他人的代码的时候，我想出了一个阅读过程，这个过程只包含三步。很多人可能已经遵循这三步了，但是我保证还存在很多人并不是这样的。</p>
-<p>以下是我的步骤。</p>
-<h2 id="1-选择一个特殊的兴趣点"><a href="#1-选择一个特殊的兴趣点" class="headerlink" title="1.选择一个特殊的兴趣点"></a>1.选择一个特殊的兴趣点</h2><p>当我第一次尝试阅读代码的时候，那真是一场灾难。</p>
-<p>那时候我在学习Sinatra，我想深入的了解下底层细节。对于从哪里开始我一无所知。不开玩笑的说，我找到了Github上的仓库，开始盲目随机挑选文件。</p>
-<p>我想我可以花一下午的时间学习它，并且用一顿晚餐的时间牢牢的掌握它。终究，阅读我自己的代码就简单多了，那么区别到底在哪呢？</p>
-<p>我们都知道是怎么回事了，我只想说，阅读别人的代码的感觉就像撞上了一堵满是文字的墙。</p>
-<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-070647.gif" alt="duang,duang,duang"></p>
-<p>我一次想学习的太多了，很多初学者在第一次尝试阅读源码的时候都会犯一样的错误。</p>
-<p><strong>思维模型是一步一步建立起来的，代码应该用一样的方式阅读。</strong></p>
-<p>相比较通过艰难险阻来消化1000行代码，不如专注于一个单独的主题。如果可以分解成一个单独的方法就更好了。</p>
-<p>有一个狭小的目标可以帮助你了解什么是有相关的，什么是无关的。没有必要在不相关的地方浪费精力。</p>
-<p>无论如何，选择一个特殊的主题并不会解决你所有的问题。现在依旧有一个问题，那就是如何从代码库中找到相关的代码。</p>
-<p>这时候步骤二就来啦。</p>
-<h2 id="2-找到那根松散的线"><a href="#2-找到那根松散的线" class="headerlink" title="2.找到那根松散的线"></a>2.找到那根松散的线</h2><p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-070640.png" alt></p>
-<p>现在你有了一个明确的要学习的方法，下一步要做什么呢？</p>
-<p>我们非常幸运，编程语言都有调查工具。</p>
-<p>不管你想知道一个对象的一个类，一个类的父类，追踪堆栈，或者某个特定方法的所有者，大多数语言都提供这些特性。当你开始解开代码库的挂毯时，你会找到很多可以追寻的松线。</p>
-<p>与其用文字解释这个概念，我宁愿用代码展示给你。</p>
-<h3 id="调查"><a href="#调查" class="headerlink" title="调查"></a>调查</h3><p>假设我想学习更多关于ActiveRecord相关的内容，我会将我的注意点集中在<code>belongs_to</code>方法，试图理解它是如何影响我的的ActiveRecord模型的。</p>
-<p>ActiveRecord是Rails的一部分，Rails是以Ruby构建的，Ruby提供了大量的研究工具。</p>
-<p>我的第一个方法是使用调试工具，比如<code>pry</code> gem，用来仔细的分析我的一个ActiveRecord models。以下是我选择用来调试的模型的代码。</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Comment</span> &lt; ActiveRecord::Base</span></span><br><span class="line">  belongs_to <span class="symbol">:creator</span>, <span class="symbol">foreign_key:</span> <span class="string">'user_id'</span>, <span class="symbol">class_name:</span> <span class="string">'User'</span></span><br><span class="line">  belongs_to <span class="symbol">:post</span></span><br><span class="line">  binding.pry</span><br><span class="line">  validates <span class="symbol">:body</span>, <span class="symbol">presence:</span> <span class="literal">true</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+            <p>
+              如何阅读代码而不扯掉自己的头发
+写更多代码
+阅读更多代码
+每天重复以上
 
-<p>将注意力集中在<code>binding.pry</code>的部分。当Rails运行到这一行代码时，<code>pry</code>会暂停应用的运行并打开命令控制行。</p>
-<p>下面是我在学习这个<code>belongs_to</code>关联的时候在pry控制点做的简单交互。</p>
-<ul>
-<li>我输入的所有行都以<code>pry &gt;</code>开头</li>
-<li><code>=&gt;</code>后显示的是控制台的输出</li>
-</ul>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">pry&gt; class = belongs_to(:post).class</span><br><span class="line">=&gt; ActiveRecord::Reflection::AssociationReflection</span><br><span class="line">pry&gt; <span class="class"><span class="keyword">class</span>.<span class="title">ancestors</span></span></span><br><span class="line">=&gt; [ActiveRecord::Reflection::AssociationReflection,        </span><br><span class="line">    ActiveRecord::Reflection::MacroReflection,</span><br><span class="line">     ...omitted <span class="keyword">for</span> brevity ]</span><br><span class="line">pry&gt; <span class="keyword">defined</span>? belongs_to</span><br><span class="line">=&gt; <span class="string">"method"</span></span><br><span class="line">pry&gt; method(<span class="symbol">:belongs_to</span>).owner</span><br><span class="line">=&gt; ActiveRecord::Associations::ClassMethods</span><br></pre></td></tr></table></figure>
+这是我再转行做编程几乎两年后给自己的建议。幸运的是，现在网络上有大量的课程和辅导来教会我们如何编码。不幸的是，现在依旧几乎没有什么指导我们如何阅读代码的资源。这是一个巨大的差距，目前越来越多的毕业生进入到技术领域，对阅读源码的强调从未如此重要。就像Brandon Bloom所说的：
 
-<p>以防你不了解Ruby，并且这些交互使你困惑，我提供了以下SparkNotes。</p>
-<ul>
-<li>当<code>belongs_to :post</code>运行时，它会返回一个<code>AssociatonReflection</code>类的实例。</li>
-<li><code>MacroRefletion</code>是<code>AssociationReflection</code>的超类。</li>
-<li><code>belongs_to</code>是定义在位于<code>ActiveRecord::Associations</code>的<code>ClassMethods</code>模块中的一个方法类。</li>
-</ul>
-<p>现在我有了很多引线，我应该先循着哪一条线呢？因为我对<code>belongs_to</code>方法本身更感兴趣，而并不想了解它的返回值，我开始研究<code>ClassMethods</code>模块。</p>
-<h2 id="3-跟随足迹"><a href="#3-跟随足迹" class="headerlink" title="3.跟随足迹"></a>3.跟随足迹</h2><p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-070631.png" alt></p>
-<p>现在你有了想要遵循的线索，剩下要做的事就是追踪这条线索知道你找到想要的答案。这看上去是个很明确的步骤，但是很多初学者都在这里被绊倒。</p>
-<p>其中一个原因就是代码库并没有目录，我们只能寄希望于维护者是以一种可读的方式组织自己的代码。</p>
-<p>在更大的项目中有很多的维护人员，通常情况下这并不是一个问题。</p>
-<p>在小型的项目中，你可能发现自己正在趟过一个巨大单一的文件，试图破译一个单个名称的变量，然后数不清的问自己：”这东西从哪来的？”。</p>
-<h3 id="Github的搜索"><a href="#Github的搜索" class="headerlink" title="Github的搜索"></a>Github的搜索</h3><p>一个能使这个任务更简单的工具是Github的搜索工具(假设你正在阅读的工程在Github上)。Github的搜索很便利，因为它会展示出所有和你搜索内容相匹配的文件，并且给出这些匹配内容在文件中的位置。</p>
-<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-070623.png" alt></p>
-<p>为了获得最好的结果，你需要使你搜索的内容越明确越好，这需要你知道自己正在找的东西是什么。用你交叉的十指漫无目的得在Github中搜索是徒劳的。</p>
-<p>回到我再步骤二中举得例子，我正在尝试在<code>ActiveRecord::Associations</code>中找到<code>ClassMethods</code>模块。通俗的来讲，我正在寻找嵌套在<code>ActivieRecord</code>模块中的<code>Associations</code>模块中的<code>ClassMethods</code>模块。并且我还在寻找<code>belongs_to</code>方法。</p>
-<p>这是我搜索的内容。</p>
-<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-131823.png" alt="img"></p>
-<p>显示的结果正好是我正在寻找的内容。</p>
-<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-131902.png" alt="img"></p>
-<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-25-131918.png" alt="belongs_to method inside of ClassMethods"></p>
-<h3 id="可能需要更多的研究"><a href="#可能需要更多的研究" class="headerlink" title="可能需要更多的研究"></a>可能需要更多的研究</h3><p>GitHub将显著的缩小你的搜索范围，依靠这个，我们可以找到一个更简单的点来深入的学习代码库。</p>
-<p>不幸的是，发现一个类或者一个方法本身很少能最终解开谜团，你可能发现自己在一个一个模块间来回跳转，直到对全局有了理解。</p>
-<p>我的情况是，<code>belongs_to</code>类引导我到了<code>BelongsTO</code>类中的<code>build</code>方法。这将我带到了<code>Association</code>超类。</p>
-<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-26-032726.png" alt="build method in BelongsTo class"></p>
-<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-04-26-032736.png" alt="build method in Association class"></p>
-<p>最后，我发现<code>belongs_to</code>方法会导致Rails添加几个实例方法到我的模型中，包括getter和setter方法。它使用称为元编程的高级编程技术来实现这一点。</p>
-<p>Rails还创建了一个Reflection类的实例，用于存储有关该关联的信息。</p>
-<p>Rails API文档中是这样描述的：</p>
-<blockquote>
-<p><em>Reflection enables the ability to examine the associations and aggregations of Active Record classes and objects. This information, for example, can be used in a form builder that takes an Active Record object and creates input fields for all of the attributes depending on their type and displays the associations to other objects.</em></p>
-</blockquote>
-<p>好神奇。</p>
-<h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h2><p>我不能保证分析其他人的程序将会是很有趣并且让人愉快的，但是这值得去做。这会给你的技能树增加一个至关重要的技能，并且提供额外的自由。你将不再需要依靠完整的文档或示例。虽然这是值得欣赏的，但是并不能解决所有问题。正如Jeff Atwood所说：</p>
-<blockquote>
-<p><strong>No matter what the documentation says, the source code is the ultimate truth, the best and most definitive and up-to-date documentation you’re likely to find.</strong></p>
-</blockquote>
-<blockquote>
-<p>不管文档是咋说的，源码都是无法否认的事实，你可以找到最好的，最可信的，最新的文档。</p>
-</blockquote>
-<p>所以尝试一下吧！</p>
-<p>现在肯定有一些你一直渴望了解学习的东西。 不要让代码库的大小吓倒你。 打开代码库到您最喜欢的框架并开始挖掘。 如果你按照我在这篇文章中列出的步骤，你很快就会成为一名源代码大师。</p>
-<p>原文地址：<a href="https://medium.com/launch-school/how-to-read-source-code-without-ripping-your-hair-out-e066472bbe8d" target="_blank" rel="noopener">https://medium.com/launch-school/how-to-read-source-code-without-ripping-your-hair-out-e066472bbe8d</a></p>
+如果代码在你的机器上运行，那就是你的软件，你要为此负责，你必须理解它们。
 
+
+虽然每一个程序员都应该阅读代码，但是他们并没有。很多程序员选择避免阅读代码的原因是因为阅读别人的代码很难，这让人沮丧，并且让他们觉得自己很蠢。我了解这种感受，因为
+              ...
+            </p>
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/04/26/【译】如何正确的阅读代码/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
@@ -1108,25 +851,25 @@
 
       
           
-            <h3 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h3><p>我们在引用其他人封装的控件或者开源库的时候，经常会遇到依赖包重复的问题。因为很多人在封装的时候也引用了别人的库，这就难免会产生两个库都引用了相同模块的问题，这时候在build的时候就会失败。如下，我们引入了两个包含com.google.zxing的依赖：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">implementation 'com.journeyapps:zxing-android-embedded:3.5.0'</span><br><span class="line">implementation 'cn.yipianfengye.android:zxing-library:2.2'</span><br></pre></td></tr></table></figure>
+            <p>
+              问题背景我们在引用其他人封装的控件或者开源库的时候，经常会遇到依赖包重复的问题。因为很多人在封装的时候也引用了别人的库，这就难免会产生两个库都引用了相同模块的问题，这时候在build的时候就会失败。如下，我们引入了两个包含com.google.zxing的依赖：
+implementation 'com.journeyapps:zxing-android-embedded:3.5.0'implementation 'cn.yipianfengye.android:zxing-library:2.2'
 
-<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-03-20-025008.png" alt="报错信息"></p>
-<p>android developer中介绍如下：</p>
-<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-03-20-025155.png" alt="官方说明"></p>
-<h3 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h3><p>这种情况下我们要把重复的引用排除。</p>
-<p>如果要排除一个group，可以使用以下的引用方式：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">implementation("cn.yipianfengye.android:zxing-library:2.2") &#123;</span><br><span class="line">    exclude group: 'com.google.zxing'</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>或者可以排除group中的指定module：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">implementation("com.afollestad.material-dialogs:core:0.9.5.0") &#123;</span><br><span class="line">    exclude group: 'com.android.support', module: 'support-v13'</span><br><span class="line">    exclude group: 'com.android.support', module: 'support-vector-drawable'</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+android developer中介绍如下：
 
-<p>或者可以粗暴的设置把所有引用的这个group都排除：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">configurations&#123;</span><br><span class="line">    all*.exclude group:'com.google.zxing'</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>另外在我们自己封装控件或者开源库的时候，一些常用的依赖<strong>建议用provided的方式依赖（android studio3.0中更改为compileOnly）</strong>，这样只会在编译时有效，不会参与打包。减少使用者出现重复冲突的问题。</p>
-
+解决办法这种情况下我们要把重复的引用排除。
+              ...
+            </p>
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/03/20/解决Android-Studio中远程依赖包重复的问题/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
@@ -1222,21 +965,22 @@
 
       
           
-            <h3 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h3><p>在有些业务场景中，需要再android原生APP中嵌入WebView来做，在使用HTTPS时，会发现部分android手机中Mixed Content无法加载。</p>
-<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-03-19-090358.png" alt></p>
-<h4 id="什么是Mixed-Content呢"><a href="#什么是Mixed-Content呢" class="headerlink" title="什么是Mixed Content呢"></a>什么是Mixed Content呢</h4><p>HTTPS 网页中加载的 HTTP 资源被称之为 Mixed Content（混合内容）</p>
-<p><strong>混合内容</strong>在以下情况下出现：初始 HTML 内容通过安全的 HTTPS 连接加载，但其他资源（例如，图像、视频、样式表、脚本）则通过不安全的 HTTP 连接加载。之所以称为混合内容，是因为同时加载了 HTTP 和 HTTPS 内容以显示同一个页面，且通过 HTTPS 加载的初始请求是安全的。现代浏览器会针对此类型的内容显示警告，以向用户表明此页面包含不安全的资源。</p>
-<p>在 Android 5.0 之后的WebView中是默认不加载任何类型的Mixed Content的资源。由于把所有HTTP资源都替换成HTTPS可能工作量很大，且很可能产生遗漏，所以可以修改WebView的行为。</p>
-<p>在android developer中是这样介绍的：</p>
-<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-03-19-091258.png" alt></p>
-<p>要修改这种行为，可以给WebView做出以下设置：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">WebSettings settings = mWebView.getSettings();</span><br><span class="line"><span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.LOLLIPOP) &#123;</span><br><span class="line">  settings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+            <p>
+              问题背景在有些业务场景中，需要再android原生APP中嵌入WebView来做，在使用HTTPS时，会发现部分android手机中Mixed Content无法加载。
 
-<p>要注意以上api是android API 21以后提供的，执行前要加SDK版本的判断，在之前的版本都是默认加载不安全内容的，所以不需要设置。</p>
-<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><p><a href="https://developers.google.com/web/fundamentals/security/prevent-mixed-content/what-is-mixed-content?hl=zh-cn" target="_blank" rel="noopener">https://developers.google.com/web/fundamentals/security/prevent-mixed-content/what-is-mixed-content?hl=zh-cn</a></p>
-<p><a href="https://developer.android.com/reference/android/webkit/WebSettings.html" target="_blank" rel="noopener">https://developer.android.com/reference/android/webkit/WebSettings.html</a></p>
-
+什么是Mixed Content呢HTTPS 网页中加载的 HTTP 资源被称之为 Mixed Content（混合内容）
+混合内容在以下情况下出现：初始 HTML 内容通过安全的 HTTPS 连接加载，但其他资源（例如，图像、视频、样式表、脚本）则通过不安全的 HTTP 连接加载。之所以称为混合内容，是因为同时加载了 HTTP 和 HTTPS 内容以显示同一个页面，且通过 HTTPS 加载的初始请求是安全的。现代浏览器会针
+              ...
+            </p>
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/03/19/android中WebView不加载Mixed-Content的解决/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
@@ -1340,13 +1084,24 @@
 
       
           
-            <p>在QMUIFragment中如果不在主线程调用popBackStack();会报出异常Must be called from main thread of fragment host。</p>
-<p><img src="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-01-17-073023.png" alt></p>
-<p>因为在跳转时，只能在主线程中进行。</p>
-<p>因此可以在handler中利用Looper.getMainLooper()。</p>
-<p>示例如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Handler handler = <span class="keyword">new</span> Handler(Looper.getMainLooper());</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PopBackStackThread</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        popBackStack();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">handler.post(<span class="keyword">new</span> PopBackStackThread());</span><br></pre></td></tr></table></figure>
+            <p>
+              在QMUIFragment中如果不在主线程调用popBackStack();会报出异常Must be called from main thread of fragment host。
+
+因为在跳转时，只能在主线程中进行。
+因此可以在handler中利用Looper.getMainLooper()。
+示例如下：
+Handler handler = new Handler(Looper.getMainLooper());class PopBackStackThread implements Runnable &#123;    public void run() &#123;        po
+              ...
+            </p>
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/01/17/Android-error-Must-be-called-from-main-thread-of-fragment-host/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
@@ -1450,33 +1205,23 @@
 
       
           
-            <p>几乎半年没有更新了，一方面是最近确实有点忙，另一方面是自己有点懈怠了，除了工作以外，没去积累更多东西，游戏倒是玩了不少。</p>
-<p>最近一直在做Android的一些开发，UI使用了开源的UI库<a href="https://github.com/QMUI/QMUI_Android" target="_blank" rel="noopener">QMUI_Android</a>，有的时候会发现在使用其中的某些组件时不知道如何更改其UI的样式。这里把两处修改方法记录一下，以后遇到其他地方也可以参考下思路。</p>
-<h3 id="更改popup的背景颜色"><a href="#更改popup的背景颜色" class="headerlink" title="更改popup的背景颜色"></a>更改popup的背景颜色</h3><p>demo中popup的背景默认是白色的。如果我们需要不同背景颜色的popup该咋办呢。</p>
-<p>demo中popup的代码是这样的：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (mNormalPopup == <span class="keyword">null</span>) &#123;</span><br><span class="line">            mNormalPopup = <span class="keyword">new</span> QMUIPopup(getContext(), QMUIPopup.DIRECTION_NONE);</span><br><span class="line">            TextView textView = <span class="keyword">new</span> TextView(getContext());</span><br><span class="line">            textView.setLayoutParams(mNormalPopup.generateLayoutParam(</span><br><span class="line">                    QMUIDisplayHelper.dp2px(getContext(), <span class="number">250</span>),</span><br><span class="line">                    WRAP_CONTENT</span><br><span class="line">            ));</span><br><span class="line">            textView.setLineSpacing(QMUIDisplayHelper.dp2px(getContext(), <span class="number">4</span>), <span class="number">1.0f</span>);</span><br><span class="line">            <span class="keyword">int</span> padding = QMUIDisplayHelper.dp2px(getContext(), <span class="number">20</span>);</span><br><span class="line">            textView.setPadding(padding, padding, padding, padding);</span><br><span class="line">            textView.setText(<span class="string">"Popup 可以设置其位置以及显示和隐藏的动画"</span>);</span><br><span class="line">            textView.setTextColor(ContextCompat.getColor(getContext(), R.color.app_color_description));</span><br><span class="line">            mNormalPopup.setContentView(textView);</span><br><span class="line">            mNormalPopup.setOnDismissListener(<span class="keyword">new</span> PopupWindow.OnDismissListener() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDismiss</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    mActionButton1.setText(getContext().getResources().getString(R.string.popup_normal_action_button_text_show));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
-
-<p>首先想到给TextView一个有颜色的背景，</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">textView.setBackgroundColor(getResources().getColor(R.color.popup_background_color));</span><br></pre></td></tr></table></figure>
-
-<p>试了一下，发现上方的三角形的颜色没有变化。</p>
-<p>看一下源码中的这个地方的UI是如何设置的。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setContentView</span><span class="params">(View root)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (root.getBackground() != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (root <span class="keyword">instanceof</span> IQMUILayout) &#123;</span><br><span class="line">            ((IQMUILayout) root).setRadius(getRootLayoutRadius(mContext));</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            QMUIFrameLayout clipLayout = <span class="keyword">new</span> QMUIFrameLayout(mContext);</span><br><span class="line">            clipLayout.setRadius(getRootLayoutRadius(mContext));</span><br><span class="line">            clipLayout.addView(root);</span><br><span class="line">            root = clipLayout;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@SuppressLint</span>(<span class="string">"InflateParams"</span>) FrameLayout layout = (FrameLayout) LayoutInflater.from(mContext)</span><br><span class="line">        .inflate(getRootLayout(), <span class="keyword">null</span>, <span class="keyword">false</span>);</span><br><span class="line">    mArrowDown = (ImageView) layout.findViewById(R.id.arrow_down);</span><br><span class="line">    mArrowUp = (ImageView) layout.findViewById(R.id.arrow_up);</span><br><span class="line">    FrameLayout box = (FrameLayout) layout.findViewById(R.id.box);</span><br><span class="line">    box.addView(root);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">super</span>.setContentView(layout);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>发现其中mArrowUPS是通过layout.findViewById(R.id.arrow_up)获取的。</p>
-<p>我们也可以拿到这个ImageView并进行设置，切了一个不同颜色的三角形放进去。</p>
-<p>注意要在mNormalPopup.show(v);之后做这个动作。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ImageView arrowUp = mNormalPopup.getDecorView().findViewById(R.id.arrow_up);</span><br><span class="line">arrowUp.setImageDrawable(getResources().getDrawable(R.mipmap.triangle));</span><br></pre></td></tr></table></figure>
-
-<h3 id="更改switch的开关样式"><a href="#更改switch的开关样式" class="headerlink" title="更改switch的开关样式"></a>更改switch的开关样式</h3><p>在使用QMUICommonListItemView中ACCESSORY_TYPE_SWITCH的itemView时，如果我们需要一个不同颜色UI，也可以自己切图进行设置。</p>
-<p>源码中样式是这样设置的：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mSwitch = <span class="keyword">new</span> CheckBox(getContext());</span><br><span class="line">mSwitch.setButtonDrawable(QMUIResHelper.getAttrDrawable(getContext(), R.attr.qmui_common_list_item_switch));</span><br></pre></td></tr></table></figure>
-
-<p>我们可以在使用时自己根据情况设置：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">switchNode.getSwitch().setButtonDrawable(getResources().getDrawable(R.mipmap.icon_switch_checked));</span><br><span class="line">switchNode.getSwitch().setButtonDrawable(getResources().getDrawable(R.mipmap.icon_switch_normal));</span><br></pre></td></tr></table></figure>
-
-
+            <p>
+              几乎半年没有更新了，一方面是最近确实有点忙，另一方面是自己有点懈怠了，除了工作以外，没去积累更多东西，游戏倒是玩了不少。
+最近一直在做Android的一些开发，UI使用了开源的UI库QMUI_Android，有的时候会发现在使用其中的某些组件时不知道如何更改其UI的样式。这里把两处修改方法记录一下，以后遇到其他地方也可以参考下思路。
+更改popup的背景颜色demo中popup的背景默认是白色的。如果我们需要不同背景颜色的popup该咋办呢。
+demo中popup的代码是这样的：
+if (mNormalPopup == null) &#123;            mNormalPopup 
+              ...
+            </p>
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/2018/12/07/如何修改QMUI中的一些组件UI/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
@@ -1580,72 +1325,32 @@
 
       
           
-            <h1 id="区块链实际上是如何工作的？"><a href="#区块链实际上是如何工作的？" class="headerlink" title="区块链实际上是如何工作的？"></a>区块链实际上是如何工作的？</h1><p>在维基百科上，区块链是这样定义的：</p>
-<blockquote>
-<p>一种分布式的数据库，用于维护一个连续的、不断增长的记录（称为块）列表。</p>
-</blockquote>
-<p>看上去很好很简单，但是它是如何工作的呢？</p>
-<p>为了说明区块链，我们将要用到一个名为<a href="https://github.com/seanjameshan/blockchain-cli" target="_blank" rel="noopener">Blockchain CLI</a>的开源的命令行交互界面。</p>
-<p>另外我还创建了<a href="https://blockchaindemo.io/" target="_blank" rel="noopener">一个基于浏览器的版本</a></p>
-<p><img src="https://cdn-images-1.medium.com/max/1600/1*cdVD7nxyDPb35phEisVXww.png" alt></p>
-<h2 id="安装命令行界面版本"><a href="#安装命令行界面版本" class="headerlink" title="安装命令行界面版本"></a>安装命令行界面版本</h2><p>如果你还没有安装Node.js</p>
-<p>在终端中执行下面的命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install blockchain-cli -g</span><br><span class="line">blockchain</span><br></pre></td></tr></table></figure>
+            <p>
+              区块链实际上是如何工作的？在维基百科上，区块链是这样定义的：
 
-<p>你应该会看到<code>👋 Welcome to Blockchain CLI!</code> 和<code>blockchain →</code>提示，表明准备好了接受命令。</p>
-<h2 id="块看起来是什么样子？"><a href="#块看起来是什么样子？" class="headerlink" title="块看起来是什么样子？"></a>块看起来是什么样子？</h2><p>要查看你当前的区块，在命令提示符中输入<code>blockchain</code>或者<code>bc</code>，你会看到如下图所示的区块。</p>
-<p><img src="https://cdn-images-1.medium.com/max/1600/1*Y3c_hIqCuiDH4x-8dObVyg.png" alt></p>
-<ul>
-<li><strong>Index(Block #)</strong>:这是哪一个块？（创世区块的索引为0）</li>
-<li><strong>Hash</strong>:这个块是否有效</li>
-<li><strong>Previous Hash</strong>:上一个块是否有效</li>
-<li><strong>Timestamp</strong>:这个块生成的时间</li>
-<li><strong>Data</strong>:这个块中存储的信息</li>
-<li><strong>Nonce</strong>:经历了多少次迭代后找到的有效块</li>
-</ul>
-<h3 id="创世区块"><a href="#创世区块" class="headerlink" title="创世区块"></a>创世区块</h3><p>所有区块都是从创世区块开始的。接下来你会看到，每一个区块在区块链中都依赖于上一个区块。所以，我们需要创世区块来开采我们的第一个区块。</p>
-<h2 id="当一个新的块被开采时发生了什么？"><a href="#当一个新的块被开采时发生了什么？" class="headerlink" title="当一个新的块被开采时发生了什么？"></a>当一个新的块被开采时发生了什么？</h2><p>我们来开采第一个区块，在命令提示符中输入<code>mine freeCodeCamp♥︎</code></p>
-<p><img src="https://cdn-images-1.medium.com/max/1600/1*SmJPc37pUbFySCvUdxnQxA.gif" alt></p>
-<p>在区块链上查看最后的区块索引和上一个区块的hash。在这种情况下，创世区块是最后一个区块。</p>
-<ul>
-<li><strong>Index:</strong> o+1 = 1</li>
-<li><strong>Previous Hash:</strong> 0000018035a828da0…</li>
-<li><strong>Timestamp:</strong> When the block is added</li>
-<li><strong>Data:</strong> freeCodeCamp❤</li>
-<li><strong>Hash:</strong> ??</li>
-<li><strong>Nonce:</strong> ??</li>
-</ul>
-<h2 id="如何计算出hash值"><a href="#如何计算出hash值" class="headerlink" title="如何计算出hash值"></a>如何计算出hash值</h2><p>hash值是一个唯一标识数据的固定长度的数值。</p>
-<p>一个hash值是由index,previous block hash,timestamp,block data和nonce这些输入计算出的。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CryptoJS.SHA256(index + previousHash + timestamp + data + nonce)</span><br></pre></td></tr></table></figure>
+一种分布式的数据库，用于维护一个连续的、不断增长的记录（称为块）列表。
 
-<p>SHA256算法会计算出一个唯一的hash值，给出上述的输入，相同的输入总是会返回同一个hash值。</p>
-<h3 id="你注意到了block-hash中的四个前导0了吗？"><a href="#你注意到了block-hash中的四个前导0了吗？" class="headerlink" title="你注意到了block hash中的四个前导0了吗？"></a>你注意到了block hash中的四个前导0了吗？</h3><p>四个前导0是有效散列的最低要求。所需的前导0的数量称为难度。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">function isValidHashDifficulty(hash, difficulty) &#123;</span><br><span class="line">  for (var i = 0, b = hash.length; i &lt; b; i ++) &#123;</span><br><span class="line">      if (hash[i] !== &apos;0&apos;) &#123;</span><br><span class="line">          break;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  return i &gt;= difficulty;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+看上去很好很简单，但是它是如何工作的呢？
+为了说明区块链，我们将要用到一个名为Blockchain CLI的开源的命令行交互界面。
+另外我还创建了一个基于浏览器的版本
 
-<p>同时也被称为<a href="https://zh.wikipedia.org/wiki/工作量證明" target="_blank" rel="noopener">工作量证明</a>。</p>
-<h2 id="什么是nonce"><a href="#什么是nonce" class="headerlink" title="什么是nonce"></a>什么是nonce</h2><p>nonce是用来查找有效hash的数字。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">let nonce = 0;</span><br><span class="line">let hash;</span><br><span class="line">let input;</span><br><span class="line">while(!isValidHashDifficulty(hash)) &#123;     </span><br><span class="line">  nonce = nonce + 1;</span><br><span class="line">  input = index + previousHash + timestamp + data + nonce;</span><br><span class="line">  hash = CryptoJS.SHA256(input)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+安装命令行界面版本如果你还没有安装Node.js
+在终端中执行下面的命令：
+npm install blockchain-cli -gblockchain
 
-<p>nonce值会迭代直到hash有效，在我们的案例中，一个有效的hash至少有四个前导0，查找与有效hash相对应的nonce的过程被称为mining(挖矿)。</p>
-<p>随着难度的增加，存在的有效的hash值得数量减少，这时查找有效的hash值就需要更多的算力。</p>
-<h3 id="为什么这很重要？"><a href="#为什么这很重要？" class="headerlink" title="为什么这很重要？"></a>为什么这很重要？</h3><p>因为这保持了区块链的不可变。</p>
-<p>如果我们有下面的区块链A→B→C，现在有人想要修改区块A中的数据。将会发生：</p>
-<ol>
-<li>区块A中的数据变化</li>
-<li>区块A的hash发生变化，因为在计算A的hash值时用到了A中的数据</li>
-<li>区块A变为无效，因为它的hash不再有四个前导0</li>
-<li>区块B的hash发生变化，因为在计算B的hash值是用到了A的hash值</li>
-<li>区块B变为无效，因为它的hash不再有四个前导0</li>
-<li>区块C的hash发生变化，因为在计算C的hash值是用到了B的hash值</li>
-<li>区块C变为无效，因为它的hash不再有四个前导0</li>
-</ol>
-<p>改变一个区块的唯一方法就是再次挖掘区块，然后是所有区块。由于新的区块总是在被添加，所有改变区块链几乎是不可能的。</p>
-<p>希望这个教程对你有帮助。</p>
-<p>如果你想查看web版本的demo，请访问<a href="http://blockchaindemo.io/" target="_blank" rel="noopener">http://blockchaindemo.io</a></p>
-<p>原文链接：<a href="https://medium.freecodecamp.org/how-does-blockchain-really-work-i-built-an-app-to-show-you-6b70cd4caf7d" target="_blank" rel="noopener">https://medium.freecodecamp.org/how-does-blockchain-really-work-i-built-an-app-to-show-you-6b70cd4caf7d</a></p>
-
+你应该会看到👋 Welcome to Blockchain CLI! 和blockchain →提示，表明准备好了接受命令。
+块看起
+              ...
+            </p>
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/2018/08/30/how-does-blockchain-really-work/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
