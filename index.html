@@ -204,6 +204,123 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxin.blog/2020/01/27/如何设计一个秒杀系统/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ZhangXin">
+      <meta itemprop="description" content="Fusce porttitor consectetur venenatis.">
+      <meta itemprop="image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-03-19-WechatIMG1.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ZhangXin">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">
+              
+              <a href="/2020/01/27/如何设计一个秒杀系统/" class="post-title-link" itemprop="url">如何设计一个秒杀系统</a>
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2020-01-27 12:54:54 / Modified: 12:58:00" itemprop="dateCreated datePublished" datetime="2020-01-27T12:54:54+08:00">2020-01-27</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+            
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2020/01/27/如何设计一个秒杀系统/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/01/27/如何设计一个秒杀系统/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+            <p>
+              如何设计一个秒杀系统这是曾经面试时遇到的一个问题，当初我的回答是：使用乐观锁，在下单时，先减掉库存，update的时候带上条件，商品库存不能小于1，这样就不会存在下单数量超过库存的问题了现在回想下，完全没考虑到高并发时的性能
+一个真正的秒杀系统应该如何设计呢？
+在一个不考虑秒杀的系统中，下单应该包含以下的步骤:
+
+检查库存，是否足够下单
+减掉库存
+创建订单
+订单支付
+
+那么在秒杀情况下，会遇到什么问题呢？首先是突然大量增加的访问量，大量的请求在秒杀开始的一瞬间开始请求，是一种短时间的高并发，所以我们要保证在高并发下的性能。并且要注意秒杀商品的库存，不能以秒杀价卖出超出库存的商品，这样会造成损失
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2020/01/27/如何设计一个秒杀系统/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+      
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://zhangxin.blog/2019/07/17/Java-List删除指定元素/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1240,135 +1357,6 @@ if (mNormalPopup == null) &#123;            mNormalPopup
   </article>
 
     
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhangxin.blog/2018/08/30/how-does-blockchain-really-work/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ZhangXin">
-      <meta itemprop="description" content="Fusce porttitor consectetur venenatis.">
-      <meta itemprop="image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-03-19-WechatIMG1.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="ZhangXin">
-    </span>
-      <header class="post-header">
-
-        
-          <h1 class="post-title" itemprop="name headline">
-              
-              <a href="/2018/08/30/how-does-blockchain-really-work/" class="post-title-link" itemprop="url">how-does-blockchain-really-work</a>
-            
-          </h1>
-        
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              
-                
-              
-
-              <time title="Created: 2018-08-30 18:44:17" itemprop="dateCreated datePublished" datetime="2018-08-30T18:44:17+08:00">2018-08-30</time>
-            </span>
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-03-19 18:28:10" itemprop="dateModified" datetime="2019-03-19T18:28:10+08:00">2019-03-19</time>
-              </span>
-            
-          
-
-          
-            
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-        
-      
-      <span class="post-meta-item-text">Valine: </span>
-    
-    <a title="valine" href="/2018/08/30/how-does-blockchain-really-work/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2018/08/30/how-does-blockchain-really-work/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-            <p>
-              区块链实际上是如何工作的？在维基百科上，区块链是这样定义的：
-
-一种分布式的数据库，用于维护一个连续的、不断增长的记录（称为块）列表。
-
-看上去很好很简单，但是它是如何工作的呢？
-为了说明区块链，我们将要用到一个名为Blockchain CLI的开源的命令行交互界面。
-另外我还创建了一个基于浏览器的版本
-
-安装命令行界面版本如果你还没有安装Node.js
-在终端中执行下面的命令：
-npm install blockchain-cli -gblockchain
-
-你应该会看到👋 Welcome to Blockchain CLI! 和blockchain →提示，表明准备好了接受命令。
-块看起
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/08/30/how-does-blockchain-really-work/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-          <div class="post-eof"></div>
-        
-      </footer>
-  </div>
-  
-  
-  
-  </article>
-
-    
   </section>
 
   
@@ -1409,7 +1397,7 @@ npm install blockchain-cli -gblockchain
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1482,7 +1470,7 @@ npm install blockchain-cli -gblockchain
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
