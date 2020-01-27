@@ -55,19 +55,19 @@
   };
 </script>
 
-  <meta name="description" content="在有些时候我们需要遍历List，并删除其中的指定元素。这时候我们可能会犯以下错误： 12345for (int i = 0; i &amp;lt; list.size(); i++) &amp;#123;  if (&quot;a&quot;.equals(list.get(i))) &amp;#123;    list.remove(i);  &amp;#125;&amp;#125;  这样删除的问题在于，如果集合中有多个需要删除的元素，会发生并没有完全">
-<meta name="keywords" content="Java">
+  <meta name="description" content="Spring是一个轻量级的控制反转和AOP对象容器框架，控制反转指的是把对象的控制权交给spring管理。 什么是IOC? (实现思想)IOC(控制反转)：传统方式中一个对象的使用需要自己new出来，并通过一系列的set get方法来控制，IOC中由第三方(Spring)来管理这些对象的生命周期 什么是DI? (实现方式)依赖注入，对象在被创建后，里面的属性需要被set，get，由Spring来做">
+<meta name="keywords" content="Spring">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java List删除指定元素">
-<meta property="og:url" content="http://zhangxin.blog/2019/07/17/Java-List删除指定元素/index.html">
+<meta property="og:title" content="Spring知识点">
+<meta property="og:url" content="http://zhangxin.blog/2019/10/04/Spring知识点/index.html">
 <meta property="og:site_name" content="ZhangXin">
-<meta property="og:description" content="在有些时候我们需要遍历List，并删除其中的指定元素。这时候我们可能会犯以下错误： 12345for (int i = 0; i &amp;lt; list.size(); i++) &amp;#123;  if (&quot;a&quot;.equals(list.get(i))) &amp;#123;    list.remove(i);  &amp;#125;&amp;#125;  这样删除的问题在于，如果集合中有多个需要删除的元素，会发生并没有完全">
+<meta property="og:description" content="Spring是一个轻量级的控制反转和AOP对象容器框架，控制反转指的是把对象的控制权交给spring管理。 什么是IOC? (实现思想)IOC(控制反转)：传统方式中一个对象的使用需要自己new出来，并通过一系列的set get方法来控制，IOC中由第三方(Spring)来管理这些对象的生命周期 什么是DI? (实现方式)依赖注入，对象在被创建后，里面的属性需要被set，get，由Spring来做">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-07-17T07:41:00.229Z">
+<meta property="og:updated_time" content="2020-01-27T05:09:05.633Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java List删除指定元素">
-<meta name="twitter:description" content="在有些时候我们需要遍历List，并删除其中的指定元素。这时候我们可能会犯以下错误： 12345for (int i = 0; i &amp;lt; list.size(); i++) &amp;#123;  if (&quot;a&quot;.equals(list.get(i))) &amp;#123;    list.remove(i);  &amp;#125;&amp;#125;  这样删除的问题在于，如果集合中有多个需要删除的元素，会发生并没有完全">
-  <link rel="canonical" href="http://zhangxin.blog/2019/07/17/Java-List删除指定元素/">
+<meta name="twitter:title" content="Spring知识点">
+<meta name="twitter:description" content="Spring是一个轻量级的控制反转和AOP对象容器框架，控制反转指的是把对象的控制权交给spring管理。 什么是IOC? (实现思想)IOC(控制反转)：传统方式中一个对象的使用需要自己new出来，并通过一系列的set get方法来控制，IOC中由第三方(Spring)来管理这些对象的生命周期 什么是DI? (实现方式)依赖注入，对象在被创建后，里面的属性需要被set，get，由Spring来做">
+  <link rel="canonical" href="http://zhangxin.blog/2019/10/04/Spring知识点/">
 
 
 <script id="page-configurations">
@@ -81,7 +81,7 @@
   };
 </script>
 
-  <title>Java List删除指定元素 | ZhangXin</title>
+  <title>Spring知识点 | ZhangXin</title>
   
 
 
@@ -207,7 +207,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhangxin.blog/2019/07/17/Java-List删除指定元素/">
+    <link itemprop="mainEntityOfPage" href="http://zhangxin.blog/2019/10/04/Spring知识点/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ZhangXin">
@@ -221,7 +221,7 @@
       <header class="post-header">
 
         
-          <h1 class="post-title" itemprop="name headline">Java List删除指定元素
+          <h1 class="post-title" itemprop="name headline">Spring知识点
 
             
           </h1>
@@ -238,11 +238,19 @@
                 
               
 
-              <time title="Created: 2019-07-17 15:03:17 / Modified: 15:41:00" itemprop="dateCreated datePublished" datetime="2019-07-17T15:03:17+08:00">2019-07-17</time>
+              <time title="Created: 2019-10-04 13:05:41" itemprop="dateCreated datePublished" datetime="2019-10-04T13:05:41+08:00">2019-10-04</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-01-27 13:09:05" itemprop="dateModified" datetime="2020-01-27T13:09:05+08:00">2020-01-27</time>
+              </span>
             
           
 
@@ -266,8 +274,8 @@
       
       <span class="post-meta-item-text">Valine: </span>
     
-    <a title="valine" href="/2019/07/17/Java-List删除指定元素/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2019/07/17/Java-List删除指定元素/" itemprop="commentCount"></span>
+    <a title="valine" href="/2019/10/04/Spring知识点/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/10/04/Spring知识点/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -283,20 +291,50 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>在有些时候我们需要遍历List，并删除其中的指定元素。这时候我们可能会犯以下错误：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; list.size(); i++) &#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="string">"a"</span>.equals(list.get(i))) &#123;</span><br><span class="line">    list.remove(i);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <p>Spring是一个轻量级的控制反转和AOP对象容器框架，控制反转指的是把对象的控制权交给spring管理。</p>
+<p>什么是IOC? (实现思想)<br>IOC(控制反转)：传统方式中一个对象的使用需要自己new出来，并通过一系列的set get方法来控制，IOC中由第三方(Spring)来管理这些对象的生命周期</p>
+<p>什么是DI? (实现方式)<br>依赖注入，对象在被创建后，里面的属性需要被set，get，由Spring来做这些工作，就是DI</p>
+<p>优点有：</p>
+<ol>
+<li>简化开发，方便解耦</li>
+<li>支持AOP编程</li>
+<li>支持声明式的事务</li>
+<li>便于测试</li>
+<li>便于集成其他框架</li>
+</ol>
+<p>AOP：开闭原则</p>
+<p>applicationContext.xml:<br>配置文件中配置了一些bean，也就是容器中的对象。</p>
+<p>依赖注入：</p>
+<ol>
+<li>构造器注入：通过配置文件(constructor-arg)，构造器配置，由Spring来在对象创建时，通过构造方法注入属性值</li>
+<li>属性注入：通过设置属性(property)，使用时会调用set方法</li>
+</ol>
+<p>对象的作用域（生命周期，在bean标签的scope中设置）：<br>Spring提供了6种作用域：</p>
+<ol>
+<li>singleton：单例的</li>
+<li>prototype：不是单例的，每次创建一个新对象</li>
+<li>websocket：基于连接单例的</li>
+<li>Request：一个请求一个单例对象</li>
+<li>session：一个用户登录一个单例对象</li>
+<li>application：一个应用一个单例对象</li>
+</ol>
+<p>默认是singleton，Spring创建的对象都是单例的，同一个对象的hashCode一致</p>
+<p>Spring的循环引用：<br>Spring可以检查到循环引用的现象，不允许在非单例模式下进行循环引用，在默认的单例模式下是允许的<br>实现原理：prototype情况下，如果一个对象在被实例化的时候发现有引用对象没有实例化，则会等待引用对象被实例化<br>如果是singleton情况下，则会直接实例化，不进行检查</p>
+<p>depends-on属性，会先创建引用的对象<br>Spring的懒加载：<br>lazy-init,bean在被使用的时候才被创建</p>
+<p>Spring的自动注入：</p>
+<ol>
+<li>使用autowire标签，分为byName和byType两种，默认不自动装配</li>
+<li>使用注解@Component注册到Spring容器中，相当于配置文件里的<bean>，引用时再使用@Autowired自动注入（需要配置扫描的路径）,默认使用type注入，如果需要两个相同接口的不同实现类，名称不同，需要配合@Qualifier注明是注入哪一个实现类</bean></li>
+<li>修改对象的作用域可以使用@scope注解</li>
+<li>设置属性默认值可以使用@Value注解</li>
+</ol>
+<p>其他注解：</p>
+<ol>
+<li>@Controller</li>
+<li>@Service</li>
+<li>@Resource</li>
+</ol>
 
-<p>这样删除的问题在于，如果集合中有多个需要删除的元素，会发生并没有完全删除的问题。</p>
-<p>如果使用增强for循环呢，如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(String element : list)&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="string">"a"</span>.equals(element)) &#123;</span><br><span class="line">    list.remove(element);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>em…也不行，会报错。</p>
-<p>在遇到这种情况的时候，推荐使用迭代器来遍历删除。</p>
-<p>代码如下:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Iterator&lt;Student&gt; iterator = list.iterator();</span><br><span class="line">  <span class="keyword">while</span> (iterator.hasNext()) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="string">"a"</span>.equals(iterator.next())) &#123;</span><br><span class="line">      iterator.remove();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>或者使用removeIf：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list.removeIf(s -&gt; s.equals(<span class="string">"a"</span>));</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -311,7 +349,7 @@
           
           <div class="post-tags">
             
-              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/Spring/" rel="tag"># Spring</a>
             
           </div>
         
@@ -321,8 +359,8 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2019/06/15/【译】Java中的线程间通信/" rel="next" title="【译】Java中的线程间通信">
-                  <i class="fa fa-chevron-left"></i> 【译】Java中的线程间通信
+                <a href="/2019/07/17/Java-List删除指定元素/" rel="next" title="Java List删除指定元素">
+                  <i class="fa fa-chevron-left"></i> Java List删除指定元素
                 </a>
               
             </div>
@@ -331,8 +369,8 @@
 
             <div class="post-nav-prev post-nav-item">
               
-                <a href="/2019/10/04/Spring知识点/" rel="prev" title="Spring知识点">
-                  Spring知识点 <i class="fa fa-chevron-right"></i>
+                <a href="/2020/01/27/如何设计一个秒杀系统/" rel="prev" title="如何设计一个秒杀系统">
+                  如何设计一个秒杀系统 <i class="fa fa-chevron-right"></i>
                 </a>
               
             </div>
