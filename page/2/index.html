@@ -204,6 +204,127 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangxin.blog/2019/01/17/Android-error-Must-be-called-from-main-thread-of-fragment-host/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ZhangXin">
+      <meta itemprop="description" content="Fusce porttitor consectetur venenatis.">
+      <meta itemprop="image" content="https://myblog-1253420654.cos.ap-beijing.myqcloud.com/xiaobai/2019-03-19-WechatIMG1.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ZhangXin">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">
+              
+              <a href="/2019/01/17/Android-error-Must-be-called-from-main-thread-of-fragment-host/" class="post-title-link" itemprop="url">Android error:Must be called from main thread of fragment host</a>
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-01-17 15:16:02" itemprop="dateCreated datePublished" datetime="2019-01-17T15:16:02+08:00">2019-01-17</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-03-19 18:24:43" itemprop="dateModified" datetime="2019-03-19T18:24:43+08:00">2019-03-19</time>
+              </span>
+            
+          
+
+          
+            
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2019/01/17/Android-error-Must-be-called-from-main-thread-of-fragment-host/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/01/17/Android-error-Must-be-called-from-main-thread-of-fragment-host/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+            <p>
+              在QMUIFragment中如果不在主线程调用popBackStack();会报出异常Must be called from main thread of fragment host。
+
+因为在跳转时，只能在主线程中进行。
+因此可以在handler中利用Looper.getMainLooper()。
+示例如下：
+Handler handler = new Handler(Looper.getMainLooper());class PopBackStackThread implements Runnable &#123;    public void run() &#123;        po
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/01/17/Android-error-Must-be-called-from-main-thread-of-fragment-host/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+      
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://zhangxin.blog/2018/12/07/如何修改QMUI中的一些组件UI/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1085,7 +1206,7 @@ $('#download').on('click',function()&#123;	$.ajax(&#123;		type:'POST',		url:'/po
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">18</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1122,7 +1243,9 @@ $('#download').on('click',function()&#123;	$.ajax(&#123;		type:'POST',		url:'/po
         
           
         
-        <span class="site-state-item-count">13</span>
+          
+        
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">tags</span>
         
       </div>
